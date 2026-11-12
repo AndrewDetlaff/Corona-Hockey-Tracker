@@ -1,35 +1,21 @@
 # 🏒 Corona Ice Tracker
 
-Bot gratuit care verifică automat biletele la meciurile de hochei **CSM Corona Brașov** pe
-[Eventim](https://www.eventim.ro/artist/csm-corona-brasov/csm-corona-brasov-hochei-4277387/?affiliate=ROF)
-și știrile de pe [coronabrasov.ro](https://www.coronabrasov.ro). Te anunță pe telefon (ntfy.sh sau Telegram) și are o
-interfață web (PWA) optimizată pentru iPhone.
+Bot gratuit care verifică automat anunțurile despre bilete și programul oficial al meciurilor de hochei **CSM Corona Brașov** de pe [coronabrasov.ro](https://www.coronabrasov.ro). Te anunță imediat pe telefon (ntfy.sh sau Telegram) cu link direct către [Eventim](https://www.eventim.ro/artist/csm-corona-brasov/csm-corona-brasov-hochei-4277387/?affiliate=ROF) și include o interfață web (PWA) optimizată pentru mobil (iOS & Android) și desktop.
 
-- **Fără AI, fără costuri:** rulează gratuit pe GitHub Actions.
-- **Fără date inventate:** interfața afișează **doar** meciurile găsite efectiv pe Eventim.
+- **Fără AI, fără costuri, fără dependențe grele:** rulează gratuit pe GitHub Actions în câteva secunde folosind Node.js 20.
+- **Fără date inventate:** interfața afișează **doar** meciurile și știrile găsite pe site-ul oficial al clubului.
 
 ## Cum funcționează
 
 1. La fiecare 10 minute (08:00–23:00 ora României), GitHub Actions rulează `scripts/monitor.js`.
-2. Scriptul deschide Eventim și coronabrasov.ro cu Chromium (Playwright) și extrage meciurile și știrile.
-3. Rezultatul e comparat cu `data/matches.json`. Primești notificare când:
-   - apare un **meci nou** pe Eventim;
-   - un meci trece în status **„Disponibil”**;
-   - apare un **anunț nou despre bilete** pe coronabrasov.ro.
+2. Scriptul citește pagina oficială `coronabrasov.ro` și programul echipei de hochei seniori (`coronabrasov.ro/hochei-pe-gheata-seniori/`).
+3. Rezultatul e comparat cu `data/matches.json`. Când apare un **anunț nou despre bilete** („bilete”, „punem în vânzare”, „abonamente”, „eventim”), botul trimite o notificare cu **prioritate maximă (`urgent`)** și buton direct către pagina Eventim.
 4. Fișierul actualizat e salvat automat în repository, iar `index.html` (pe GitHub Pages) îl afișează.
-
-## Ce înseamnă etichetele din interfață
-
-| Etichetă | Semnificație |
-|---|---|
-| ✔ **Găsit pe Eventim • link direct** | Butonul te duce exact pe pagina evenimentului, unde cumperi biletele. |
-| ℹ **Link către pagina generală** | Meciul e listat, dar botul nu a găsit link-ul exact; butonul deschide pagina Corona de pe Eventim. |
-| ⚠️ **Nu mai este listat pe Eventim** | Meciul a dispărut de pe Eventim (amânat, epuizat sau scos din vânzare). Verifică manual. |
-| Banner galben/roșu sus | Botul nu a rulat încă, datele sunt vechi sau ultima verificare a eșuat. |
 
 ## Pornire rapidă
 
 ### 1. Urcă proiectul pe GitHub
+Poți folosi **GitHub Desktop** (*Publish repository*) sau linia de comandă:
 ```bash
 git init
 git add .
@@ -39,11 +25,11 @@ git remote add origin https://github.com/<utilizator>/corona-ice-tracker.git
 git push -u origin main
 ```
 
-### 2. Activează alertele pe iPhone
+### 2. Activează alertele pe telefon (iOS & Android)
 
 **Varianta A – ntfy.sh (recomandat, fără cont)**
-1. Instalează aplicația **ntfy** din App Store.
-2. Abonează-te la un topic greu de ghicit, de exemplu `corona-bv-x7k29` (oricine cunoaște topicul poate citi mesajele).
+1. Instalează aplicația **ntfy** din App Store (iOS) sau Google Play (Android).
+2. Abonează-te la un topic greu de ghicit, de exemplu `corona-bv-x7k29`.
 3. În GitHub: **Settings → Secrets and variables → Actions → New repository secret**
    - `NTFY_TOPIC` = `corona-bv-x7k29`
 
@@ -57,20 +43,18 @@ Poți folosi ambele variante simultan.
 ### 3. Pornește botul
 - **Settings → Actions → General → Workflow permissions** → bifează **Read and write permissions**.
 - **Actions → Corona Ice Tracker → Run workflow** pentru prima rulare manuală.
-- După prima rulare, `data/matches.json` se populează. Prima rulare trimite o singură notificare-rezumat
-  (nu câte una pentru fiecare meci sau știre veche).
 
 ### 4. Activează interfața web (GitHub Pages)
-- **Settings → Pages → Source: Deploy from a branch → `main` / `(root)`**.
-- Deschide link-ul în **Safari pe iPhone** → **Partajare → Adaugă pe ecranul principal**.
+- **Settings → Pages → Source: Deploy from a branch → `main` / `(root)`** (repository-ul trebuie să fie Public pentru GitHub Pages gratuit).
+- Deschide link-ul pe telefon:
+  - **iOS (Safari):** *Share → Add to Home Screen*
+  - **Android (Chrome):** *Meniu ⋮ → Install app / Add to Home screen*
 
 ## Rulare locală (opțional)
 
 Necesită [Node.js 18+](https://nodejs.org).
 
 ```bash
-npm install
-npx playwright install chromium
 node scripts/monitor.js --force          # verificare completă (ignoră intervalul orar)
 node scripts/monitor.js --test-notify    # doar notificare de test
 npx serve .                              # interfața la http://localhost:3000
@@ -81,29 +65,14 @@ Pe Windows (PowerShell), variabilele de mediu se setează așa:
 $env:NTFY_TOPIC = "corona-bv-x7k29"; node scripts/monitor.js --test-notify
 ```
 
-> Dacă deschizi `index.html` direct (dublu-click), browserul nu poate citi `data/matches.json` și apare un banner
-> de avertizare. Folosește GitHub Pages sau `npx serve .`.
-
 ## Structura proiectului
 
 ```
 ├── .github/workflows/check-tickets.yml   # rulare automată la 10 minute
 ├── data/matches.json                     # meciuri + știri (scris de bot)
-├── scripts/monitor.js                    # scraper + comparare + notificări
-├── icons/                                # pictograme PWA / iPhone
+├── scripts/monitor.js                    # monitorizare + comparare + notificări
+├── icons/                                # pictograme PWA (iOS & Android)
 ├── index.html                            # interfața web
 ├── manifest.json                         # manifest PWA
 └── package.json
 ```
-
-## Limitări cunoscute
-
-- **Structura site-urilor se poate schimba.** Dacă Eventim sau coronabrasov.ro își schimbă pagina, extragerea poate
-  eșua. În acest caz apare un banner roșu în interfață, iar rularea e marcată cu eroare în tab-ul Actions.
-- **Filtre anti-bot:** Eventim poate bloca uneori serverele GitHub. Botul raportează eroarea, nu inventează date.
-- **Competiția** (Erste Liga / Campionatul Național / Cupa României) e dedusă din titlul evenimentului. Când titlul
-  nu o menționează, meciul apare implicit la Erste Liga.
-- **Intervalul orar:** GitHub poate întârzia rulările programate cu câteva minute în perioadele aglomerate.
-- **Inactivitate:** GitHub dezactivează workflow-urile programate după 60 de zile fără activitate în repository.
-  Commit-urile automate ale botului contează de obicei ca activitate; dacă primești e-mail de dezactivare, reactivează-l
-  din tab-ul Actions.

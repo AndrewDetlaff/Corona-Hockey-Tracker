@@ -6,7 +6,7 @@
   <title>Corona Ice Tracker 🏒 | Bilete & Calendar Hochei CSM Corona Brașov</title>
   <meta name="description" content="Monitorizare automată bilete Eventim, calendarul sezonului și radar știri pentru meciurile de hochei CSM Corona Brașov la Patinoarul Olimpic." />
 
-  <!-- Apple iPhone 12 / iOS PWA Meta Tags -->
+  <!-- Mobile PWA Meta Tags (iOS & Android) -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Corona Ice" />
@@ -1035,8 +1035,8 @@
       cursor: pointer;
     }
 
-    /* Bottom Dock Bar pentru iPhone 12 */
-    .iphone-bottom-bar {
+    /* Bottom Dock Bar pentru Mobil */
+    .mobile-bottom-bar {
       position: fixed;
       bottom: calc(var(--safe-bottom) + 12px);
       left: 50%;
@@ -1155,7 +1155,7 @@
       margin-bottom: 18px;
     }
 
-    /* Responsive Mobile & iPhone 12 (390px width) */
+    /* Responsive Mobile */
     @media (max-width: 860px) {
       .main-grid {
         grid-template-columns: 1fr;
@@ -1220,7 +1220,7 @@
           <span id="last-checked-text">Verificat recent</span>
         </button>
         <button type="button" class="btn-config" id="btn-open-guide">
-          <span>📲 Alerte iPhone & Setup</span>
+          <span>📲 Alerte & Instalare</span>
         </button>
       </div>
     </header>
@@ -1310,7 +1310,7 @@
   <div class="modal-backdrop" id="config-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div class="modal-card">
       <div class="modal-header">
-        <h3 class="section-title" id="modal-title">⚙️ Status Bot & Ghid Alerte iPhone 12</h3>
+        <h3 class="section-title" id="modal-title">⚙️ Status Bot & Ghid Alerte Mobil</h3>
         <button type="button" class="btn-close-modal" id="btn-close-modal" aria-label="Închide">✕</button>
       </div>
 
@@ -1325,22 +1325,19 @@
       </div>
 
       <div class="step-box">
-        <h4>🚀 Pasul 1: Publicare pe GitHub & Activare GitHub Pages</h4>
+        <h4>📱 Pasul 1: Instalează aplicația pe telefon (iOS & Android)</h4>
         <ul>
-          <li>Urcă acest folder într-un repository pe contul tău de GitHub.</li>
-          <li>Mergi în <strong>Settings → Pages</strong> și la <em>Source</em> alege branch-ul <span class="code-inline">main</span> (folderul <span class="code-inline">/ (root)</span>).</li>
-          <li>Deschide link-ul generat în <strong>Safari pe iPhone 12</strong>, apasă pe butonul <strong>Share (Partajare)</strong> și selectează <strong>„Add to Home Screen” (Adaugă la ecranul principal)</strong> pentru experiență completă PWA!</li>
+          <li><strong>Pe iOS (Safari):</strong> apasă pe butonul <strong>Share (Partajare)</strong> și alege <strong>„Add to Home Screen” (Adaugă pe ecranul principal)</strong>.</li>
+          <li><strong>Pe Android (Chrome):</strong> apasă meniul <strong>⋮</strong> din colțul dreapta-sus și alege <strong>„Install app” (Instalează aplicația)</strong> sau <strong>„Add to Home screen”</strong>.</li>
         </ul>
       </div>
 
       <div class="step-box">
-        <h4>📲 Pasul 2: Alerte Instant pe iPhone cu ntfy.sh (Fără cont)</h4>
+        <h4>📲 Pasul 2: Alerte Instant pe telefon cu ntfy.sh (Fără cont)</h4>
         <ul>
-          <li>Instalează aplicația gratuită <strong>ntfy</strong> din App Store pe iPhone 12.</li>
-          <li>Apasă <strong>„+”</strong> și abonează-te la un topic unic ales de tine (ex: <span class="code-inline">corona-hochei-bv-2026</span>).</li>
-          <li>În GitHub, mergi la <strong>Settings → Secrets and variables → Actions → New repository secret</strong>:
-            <br />Nume: <span class="code-inline">NTFY_TOPIC</span> | Valoare: <span class="code-inline">corona-hochei-bv-2026</span>
-          </li>
+          <li>Instalează aplicația gratuită <strong>ntfy</strong> din App Store (iOS) sau Google Play (Android).</li>
+          <li>Apasă <strong>„+”</strong> și abonează-te la topicul configurat pentru acest tracker (sau la unul propriu dacă găzduiești propria copie pe GitHub).</li>
+          <li>Pentru administrator: în GitHub → <strong>Settings → Secrets and variables → Actions</strong> adaugă secretul <span class="code-inline">NTFY_TOPIC</span>.</li>
         </ul>
         <div class="ntfy-tester">
           <input
@@ -1366,8 +1363,8 @@
     </div>
   </div>
 
-  <!-- BOTTOM DOCK BAR PENTRU IPHONE 12 -->
-  <nav class="iphone-bottom-bar" aria-label="Navigare rapidă">
+  <!-- BOTTOM DOCK BAR PENTRU MOBIL -->
+  <nav class="mobile-bottom-bar" aria-label="Navigare rapidă">
     <a href="#sec-hero" class="dock-item active">
       <span class="dock-icon">🏒</span>
       <span>Meci</span>
@@ -1382,7 +1379,7 @@
     </a>
     <button type="button" class="dock-item" id="dock-open-guide">
       <span class="dock-icon">📲</span>
-      <span>Alerte iOS</span>
+      <span>Alerte</span>
     </button>
   </nav>
 
@@ -1593,15 +1590,11 @@
              Verifică direct pe <a href="${EVENTIM_ARTIST_URL}" target="_blank" rel="noopener">Eventim</a>.`;
       } else if (!d.lastChecked) {
         html = `<strong>Botul nu a rulat încă.</strong> Lista se va umple automat după prima rulare din GitHub Actions
-                (vezi <em>📲 Alerte iPhone &amp; Setup</em>). Nu sunt afișate meciuri inventate.`;
-      } else if (d.sources?.eventim && d.sources.eventim.ok === false) {
-        cls = d.sources?.coronabrasov?.ok ? 'warn' : 'error';
-        html = d.sources?.coronabrasov?.ok
-          ? `<strong>Eventim blochează conexiunile din Cloud (GitHub Actions).</strong>
-             Programul oficial și alertele de știri sunt actualizate de pe <strong>coronabrasov.ro</strong>.
-             Pentru cumpărare, accesează direct <a href="${EVENTIM_ARTIST_URL}" target="_blank" rel="noopener">Eventim</a>.`
-          : `<strong>Ultima verificare Eventim a eșuat</strong> (${esc(d.sources.eventim.error || 'eroare necunoscută')}).
-             Confirmă direct pe <a href="${EVENTIM_ARTIST_URL}" target="_blank" rel="noopener">Eventim</a>.`;
+                (vezi <em>📲 Alerte &amp; Instalare</em>). Nu sunt afișate meciuri inventate.`;
+      } else if (d.sources?.coronabrasov && d.sources.coronabrasov.ok === false) {
+        cls = 'error';
+        html = `<strong>Ultima verificare a site-ului coronabrasov.ro a eșuat</strong> (${esc(d.sources.coronabrasov.error || 'eroare necunoscută')}).
+                Poți verifica direct pe <a href="${EVENTIM_ARTIST_URL}" target="_blank" rel="noopener">Eventim</a>.`;
       } else if (Date.now() - new Date(d.lastChecked).getTime() > 3 * 3600 * 1000) {
         html = `<strong>Datele sunt mai vechi de 3 ore</strong> (ultima verificare: ${esc(formatDateTime(d.lastChecked))}).
                 Posibil ca botul să fie oprit noaptea (23:00–08:00) sau workflow-ul să fi eșuat.`;
@@ -1679,7 +1672,7 @@
 
         <div class="hero-cta-row">
           <a href="${esc(url)}" target="_blank" rel="noopener noreferrer" class="btn-primary-ticket">${esc(ticketButtonLabel(m))}</a>
-          <button type="button" class="btn-secondary-ics" id="hero-ics-btn">📅 Adaugă în Calendarul iPhone (.ics)</button>
+          <button type="button" class="btn-secondary-ics" id="hero-ics-btn">📅 Adaugă în Calendar (.ics)</button>
         </div>`;
 
       document.getElementById('hero-ics-btn').addEventListener('click', () => downloadIcsForMatch(m));
@@ -1775,7 +1768,7 @@
         </div>
         <div class="drawer-actions">
           <a href="${esc(url)}" target="_blank" rel="noopener noreferrer" class="btn-sm-gold">${esc(ticketButtonLabel(m))}</a>
-          <button type="button" class="btn-sm-ice" id="drawer-ics-btn">📅 Salvează .ics (iPhone)</button>
+          <button type="button" class="btn-sm-ice" id="drawer-ics-btn">📅 Salvează în Calendar (.ics)</button>
         </div>`;
 
       document.getElementById('drawer-ics-btn').addEventListener('click', () => downloadIcsForMatch(m));
@@ -1863,7 +1856,7 @@
           ? `${name}: ✅ OK (${s.found} găsite)`
           : `${name}: ❌ ${esc(s.error || 'eroare')}`;
       document.getElementById('modal-sources').innerHTML =
-        `${srcLine(d.sources?.eventim, 'Eventim')}<br/>${srcLine(d.sources?.coronabrasov, 'coronabrasov.ro')}`;
+        srcLine(d.sources?.coronabrasov, 'coronabrasov.ro');
     }
 
     // ------------------------------------------------------------------ încărcare
@@ -1936,7 +1929,7 @@
       document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
       // Dock: evidențiază secțiunea activă
-      document.querySelectorAll('.iphone-bottom-bar a.dock-item').forEach((a) => {
+      document.querySelectorAll('.mobile-bottom-bar a.dock-item').forEach((a) => {
         a.addEventListener('click', () => {
           document.querySelectorAll('.dock-item').forEach((d) => d.classList.remove('active'));
           a.classList.add('active');

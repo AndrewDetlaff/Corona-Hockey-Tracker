@@ -1,79 +1,14 @@
 {
-  "lastChecked": "2026-11-12T23:10:36.713Z",
+  "lastChecked": null,
   "sources": {
-    "eventim": {
-      "url": "https://www.eventim.ro/artist/csm-corona-brasov/csm-corona-brasov-hochei-4277387/?affiliate=ROF",
-      "ok": false,
-      "found": 0,
-      "error": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.eventim.ro/artist/csm-corona-brasov/csm-corona-brasov-hochei-4277387/?affiliate=ROF\nCall log:\n  - navigating to \"https://www.eventim.ro/artist/csm-corona-brasov/csm-corona-brasov-hochei-4277387/?affiliate=ROF\", waiting until \"domcontentloaded\"\n"
-    },
     "coronabrasov": {
       "url": "https://www.coronabrasov.ro",
-      "ok": true,
-      "found": 5,
+      "ok": null,
+      "found": 0,
+      "scheduleFound": 0,
       "error": null
     }
   },
   "matches": [],
-  "news": [
-    {
-      "id": "news-evenimente-hochei-seniori-campionatul-national-csa-steaua-bucuresti-cs",
-      "title": "HOCHEI SENIORI CAMPIONATUL NAȚIONAL : CSA STEAUA BUCUREȘTI - CSM CORONA BRAȘOV | MECI 54",
-      "url": "https://coronabrasov.ro/evenimente/hochei-seniori-campionatul-national-csa-steaua-bucuresti-csm-corona-brasov-meci-54/",
-      "isTicketAlert": false,
-      "keywordsMatched": [
-        "hochei",
-        "meci"
-      ],
-      "source": "coronabrasov.ro",
-      "firstSeen": "2026-11-12T23:10:36.713Z"
-    },
-    {
-      "id": "news-evenimente-hochei-seniori-campionatul-national-acs-sapientia-u23-csm-c",
-      "title": "HOCHEI SENIORI CAMPIONATUL NAȚIONAL : ACS SAPIENȚIA U23 - CSM CORONA BRAȘOV | MECI 49",
-      "url": "https://coronabrasov.ro/evenimente/hochei-seniori-campionatul-national-acs-sapientia-u23-csm-corona-brasov-meci-49/",
-      "isTicketAlert": false,
-      "keywordsMatched": [
-        "hochei",
-        "meci"
-      ],
-      "source": "coronabrasov.ro",
-      "firstSeen": "2026-11-12T23:10:36.713Z"
-    },
-    {
-      "id": "news-evenimente-hochei-seniori-erste-liga-sport-club-csikszereda-csm-corona",
-      "title": "HOCHEI SENIORI ERSTE LIGA : SPORT CLUB CSÍKSZEREDA - CSM CORONA BRAȘOV | MECI 72",
-      "url": "https://coronabrasov.ro/evenimente/hochei-seniori-erste-liga-sport-club-csikszereda-csm-corona-brasov-meci-72/",
-      "isTicketAlert": false,
-      "keywordsMatched": [
-        "hochei",
-        "erste",
-        "meci"
-      ],
-      "source": "coronabrasov.ro",
-      "firstSeen": "2026-11-12T23:10:36.713Z"
-    },
-    {
-      "id": "news-2026-08-04-abonamente-corona-brasov-pentru-sezonul-2026-2027",
-      "title": "Abonamente Corona Brașov pentru sezonul 2026–2027",
-      "url": "https://coronabrasov.ro/2026/08/04/abonamente-corona-brasov-pentru-sezonul-2026-2027/",
-      "isTicketAlert": true,
-      "keywordsMatched": [
-        "abonamente"
-      ],
-      "source": "coronabrasov.ro",
-      "firstSeen": "2026-11-12T23:10:36.713Z"
-    },
-    {
-      "id": "news-2026-08-29-corona-brasov-joaca-in-aceasta-seara-pentru-supercupa-roman",
-      "title": "Corona Brașov joacă în această seară pentru Supercupa României la hochei pe gheață!",
-      "url": "https://coronabrasov.ro/2026/08/29/corona-brasov-joaca-in-aceasta-seara-pentru-supercupa-romaniei-la-hochei-pe-gheata/",
-      "isTicketAlert": false,
-      "keywordsMatched": [
-        "hochei"
-      ],
-      "source": "coronabrasov.ro",
-      "firstSeen": "2026-11-12T23:10:36.713Z"
-    }
-  ]
+  "news": []
 }

@@ -17,7 +17,7 @@ concurrency:
 jobs:
   check-tickets:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
 
     steps:
       - name: Checkout
@@ -27,12 +27,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-
-      - name: Instalare dependențe
-        run: npm install --no-audit --no-fund
-
-      - name: Instalare Chromium (Playwright)
-        run: npx playwright install --with-deps chromium
 
       - name: Rulare monitorizare
         env:
@@ -52,7 +46,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "Nicio modificare de salvat."
           else
-            git commit -m "Actualizare automată meciuri & bilete ($(date +'%Y-%m-%d %H:%M'))"
+            git commit -m "Actualizare automată meciuri & știri ($(date +'%Y-%m-%d %H:%M'))"
             git pull --rebase --autostash
             git push
           fi

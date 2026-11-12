@@ -1,7 +1,7 @@
 {
   "name": "corona-ice-tracker",
-  "version": "1.0.0",
-  "description": "Sistem automat de monitorizare bilete și calendar meciuri hochei CSM Corona Brașov (Eventim + coronabrasov.ro) cu alerte push ntfy.sh / Telegram.",
+  "version": "1.1.0",
+  "description": "Sistem automat de monitorizare știri bilete și calendar meciuri hochei CSM Corona Brașov (coronabrasov.ro -> Eventim) cu alerte push ntfy.sh / Telegram.",
   "main": "scripts/monitor.js",
   "scripts": {
     "monitor": "node scripts/monitor.js",
@@ -12,14 +12,10 @@
     "hochei",
     "erste-liga",
     "eventim",
-    "bilete",
-    "playwright"
+    "bilete"
   ],
   "author": "Corona Ice Tracker",
   "license": "MIT",
-  "dependencies": {
-    "playwright": "^1.48.0"
-  },
   "engines": {
     "node": ">=18.0.0"
   }
