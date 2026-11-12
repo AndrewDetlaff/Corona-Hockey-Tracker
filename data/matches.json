@@ -1,16 +1,17 @@
 {
-  "lastChecked": "2026-11-12T23:10:36.713Z",
+  "lastChecked": "2026-11-12T23:25:58.165Z",
   "sources": {
     "eventim": {
       "url": "https://www.eventim.ro/artist/csm-corona-brasov/csm-corona-brasov-hochei-4277387/?affiliate=ROF",
       "ok": false,
       "found": 0,
-      "error": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.eventim.ro/artist/csm-corona-brasov/csm-corona-brasov-hochei-4277387/?affiliate=ROF\nCall log:\n  - navigating to \"https://www.eventim.ro/artist/csm-corona-brasov/csm-corona-brasov-hochei-4277387/?affiliate=ROF\", waiting until \"domcontentloaded\"\n"
+      "error": "This operation was aborted"
     },
     "coronabrasov": {
       "url": "https://www.coronabrasov.ro",
       "ok": true,
       "found": 5,
+      "scheduleFound": 0,
       "error": null
     }
   },
