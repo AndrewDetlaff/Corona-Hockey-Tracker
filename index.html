@@ -1,0 +1,2000 @@
+<!DOCTYPE html>
+<html lang="ro" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Corona Ice Tracker 🏒 | Bilete & Calendar Hochei CSM Corona Brașov</title>
+  <meta name="description" content="Monitorizare automată bilete Eventim, calendarul sezonului și radar știri pentru meciurile de hochei CSM Corona Brașov la Patinoarul Olimpic." />
+
+  <!-- Apple iPhone 12 / iOS PWA Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Corona Ice" />
+  <meta name="theme-color" content="#06101f" />
+  <meta name="format-detection" content="telephone=no" />
+
+  <!-- SVG Favicon & Apple Touch Icon inline -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%2307162c'/%3E%3Ccircle cx='50' cy='50' r='40' fill='none' stroke='%23facc15' stroke-width='4'/%3E%3Ctext x='50' y='66' font-size='48' text-anchor='middle'%3E%F0%9F%8F%92%3C/text%3E%3C/svg%3E" />
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png" />
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-rink-deep: #040b16;
+      --bg-rink-mid: #08182e;
+      --bg-rink-ice: #0d2444;
+      --corona-blue: #0055a5;
+      --corona-cyan: #38bdf8;
+      --corona-gold: #facc15;
+      --corona-gold-glow: rgba(250, 204, 21, 0.35);
+      --ice-glass: rgba(13, 33, 63, 0.62);
+      --ice-glass-strong: rgba(10, 26, 50, 0.85);
+      --ice-border: rgba(148, 210, 255, 0.18);
+      --ice-border-bright: rgba(250, 204, 21, 0.55);
+      --text-primary: #f1f7ff;
+      --text-secondary: #94b8db;
+      --text-muted: #5e82a8;
+      --status-available: #10b981;
+      --status-soon: #f59e0b;
+      --status-soldout: #ef4444;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--bg-rink-deep);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(0, 98, 204, 0.32) 0%, transparent 45%),
+        radial-gradient(circle at 85% 18%, rgba(250, 204, 21, 0.16) 0%, transparent 40%),
+        radial-gradient(circle at 50% 85%, rgba(56, 189, 248, 0.14) 0%, transparent 50%),
+        linear-gradient(180deg, #040b16 0%, #071428 48%, #040b16 100%);
+      overflow-x: hidden;
+      padding-top: calc(var(--safe-top) + 12px);
+      padding-bottom: calc(var(--safe-bottom) + 96px);
+      position: relative;
+    }
+
+    /* Marcaje subtile de patinoar pe fundal */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(56, 189, 248, 0.04) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(56, 189, 248, 0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.65) 20%, transparent 80%);
+      z-index: 0;
+    }
+
+    #ice-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .app-container {
+      position: relative;
+      z-index: 2;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* Efect Glassmorphism "Gheață Translucidă" */
+    .ice-card {
+      background: var(--ice-glass);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      border: 1px solid var(--ice-border);
+      border-radius: 22px;
+      box-shadow:
+        0 18px 40px -15px rgba(0, 0, 0, 0.65),
+        inset 0 1px 1px rgba(255, 255, 255, 0.14);
+      transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    /* Header & Top Status Bar */
+    .top-header {
+      display: flex;
+       flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 18px;
+      margin-bottom: 20px;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .brand-crest {
+      width: 48px;
+      height: 48px;
+      border-radius: 15px;
+      background: linear-gradient(135deg, #00478f 0%, #002b5c 100%);
+      border: 2px solid var(--corona-gold);
+      box-shadow: 0 0 18px var(--corona-gold-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 25px;
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      line-height: 1.05;
+      background: linear-gradient(90deg, #ffffff 0%, #bae6fd 55%, #facc15 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-subtitle {
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 13px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.13);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #6ee7b7;
+      font-size: 0.76rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: pulseGreen 2s infinite;
+    }
+
+    @keyframes pulseGreen {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.75); }
+      70% { box-shadow: 0 0 0 9px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    .btn-config {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 14px;
+      border-radius: 12px;
+      background: rgba(250, 204, 21, 0.14);
+      border: 1px solid rgba(250, 204, 21, 0.45);
+      color: var(--corona-gold);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-config:hover {
+      background: rgba(250, 204, 21, 0.24);
+      transform: translateY(-1px);
+    }
+
+    /* HERO CARD — Următorul Meci la Patinoarul Olimpic */
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      padding: 26px 24px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(250, 204, 21, 0.42);
+      background:
+        radial-gradient(circle at 90% 15%, rgba(250, 204, 21, 0.2) 0%, transparent 48%),
+        radial-gradient(circle at 10% 85%, rgba(0, 119, 255, 0.28) 0%, transparent 55%),
+        linear-gradient(135deg, rgba(9, 28, 56, 0.9) 0%, rgba(6, 19, 39, 0.92) 100%);
+    }
+
+    .hero-card::after {
+      content: 'PATINOARUL OLIMPIC BRAȘOV';
+      position: absolute;
+      right: -15px;
+      bottom: -18px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 3.4rem;
+      font-weight: 800;
+      color: rgba(255, 255, 255, 0.03);
+      pointer-events: none;
+      user-select: none;
+      letter-spacing: 2px;
+    }
+
+    .hero-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .hero-badge-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .badge-next {
+      background: var(--corona-gold);
+      color: #061325;
+      font-weight: 800;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 5px 11px;
+      border-radius: 8px;
+    }
+
+    .badge-comp {
+      background: rgba(56, 189, 248, 0.16);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #7dd3fc;
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 4px 11px;
+      border-radius: 8px;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 5px 13px;
+      border-radius: 999px;
+    }
+
+    .status-disponibil {
+      background: rgba(16, 185, 129, 0.18);
+      border: 1px solid rgba(16, 185, 129, 0.5);
+      color: #34d399;
+    }
+
+    .status-curand {
+      background: rgba(245, 158, 11, 0.18);
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      color: #fbbf24;
+    }
+
+    .status-epuizat {
+      background: rgba(239, 68, 68, 0.18);
+      border: 1px solid rgba(239, 68, 68, 0.45);
+      color: #f87171;
+    }
+
+    .hero-matchup {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 16px;
+      margin: 14px 0 22px;
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(4, 14, 29, 0.55);
+      border: 1px solid rgba(148, 210, 255, 0.12);
+    }
+
+    .team-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 8px;
+    }
+
+    .team-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 800;
+      font-size: 1.35rem;
+    }
+
+    .team-avatar.corona {
+      background: linear-gradient(135deg, #0055a5 0%, #002b5c 100%);
+      border: 2px solid var(--corona-gold);
+      color: var(--corona-gold);
+      box-shadow: 0 8px 20px rgba(0, 85, 165, 0.5);
+    }
+
+    .team-avatar.guest {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border: 2px solid rgba(148, 210, 255, 0.35);
+      color: #e2e8f0;
+    }
+
+    .team-name {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.15;
+    }
+
+    .team-tag {
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+    }
+
+    .vs-divider {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .vs-circle {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(250, 204, 21, 0.14);
+      border: 1px solid rgba(250, 204, 21, 0.5);
+      color: var(--corona-gold);
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .countdown-chip {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #bae6fd;
+      background: rgba(56, 189, 248, 0.12);
+      padding: 3px 9px;
+      border-radius: 99px;
+      white-space: nowrap;
+    }
+
+    .hero-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .meta-box {
+      background: rgba(9, 24, 46, 0.65);
+      border: 1px solid rgba(148, 210, 255, 0.12);
+      border-radius: 14px;
+      padding: 11px 13px;
+    }
+
+    .meta-label {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .meta-val {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .meta-val.gold {
+      color: var(--corona-gold);
+    }
+
+    .hero-cta-row {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 12px;
+    }
+
+    .btn-primary-ticket {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 15px 20px;
+      border-radius: 15px;
+      background: linear-gradient(135deg, #facc15 0%, #eab308 100%);
+      color: #041022;
+      font-weight: 800;
+      font-size: 0.96rem;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 10px 25px -5px rgba(250, 204, 21, 0.5);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .btn-primary-ticket:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px -5px rgba(250, 204, 21, 0.65);
+    }
+
+    .btn-secondary-ics {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 15px 18px;
+      border-radius: 15px;
+      background: rgba(56, 189, 248, 0.14);
+      border: 1px solid rgba(56, 189, 248, 0.45);
+      color: #e0f2fe;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .btn-secondary-ics:hover {
+      background: rgba(56, 189, 248, 0.24);
+      transform: translateY(-2px);
+    }
+
+    /* Main Grid Layout: Calendar + Radar Știri */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 0.95fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .section-card {
+      padding: 22px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.32rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #ffffff;
+    }
+
+    /* Filtre Competiții */
+    .filter-pills {
+      display: flex;
+      gap: 7px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      margin-bottom: 16px;
+      scrollbar-width: none;
+    }
+
+    .filter-pills::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter-btn {
+      padding: 7px 13px;
+      border-radius: 11px;
+      border: 1px solid rgba(148, 210, 255, 0.2);
+      background: rgba(8, 23, 45, 0.65);
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .filter-btn.active {
+      background: var(--corona-blue);
+      border-color: var(--corona-gold);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(0, 85, 165, 0.45);
+    }
+
+    /* Navigare Lună Calendar */
+    .calendar-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(5, 16, 33, 0.6);
+      border: 1px solid rgba(148, 210, 255, 0.14);
+      padding: 10px 14px;
+      border-radius: 14px;
+      margin-bottom: 14px;
+    }
+
+    .month-label {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--corona-gold);
+      letter-spacing: 0.6px;
+    }
+
+    .cal-arrow {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid rgba(148, 210, 255, 0.25);
+      background: rgba(15, 36, 68, 0.7);
+      color: #ffffff;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+
+    .cal-arrow:hover {
+      background: var(--corona-blue);
+    }
+
+    /* Grilă 7 coloane Luni-Duminică */
+    .weekdays-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .weekday-cell {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 4px 0;
+    }
+
+    .days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+
+    .day-cell {
+      min-height: 62px;
+      border-radius: 12px;
+      background: rgba(6, 18, 36, 0.55);
+      border: 1px solid rgba(148, 210, 255, 0.08);
+      padding: 6px 5px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      transition: all 0.18s ease;
+    }
+
+    .day-cell.empty {
+      background: transparent;
+      border-color: transparent;
+    }
+
+    .day-cell.today {
+      border-color: rgba(56, 189, 248, 0.6);
+      box-shadow: inset 0 0 10px rgba(56, 189, 248, 0.2);
+    }
+
+    .day-number {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      align-self: flex-start;
+      padding-left: 3px;
+    }
+
+    .day-cell.has-match {
+      cursor: pointer;
+      background: linear-gradient(160deg, rgba(0, 85, 165, 0.45) 0%, rgba(9, 27, 54, 0.9) 100%);
+      border: 1px solid rgba(250, 204, 21, 0.65);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+    }
+
+    .day-cell.has-match:hover,
+    .day-cell.has-match.selected {
+      transform: translateY(-2px) scale(1.03);
+      background: linear-gradient(160deg, rgba(0, 102, 204, 0.75) 0%, rgba(12, 36, 72, 0.95) 100%);
+      border-color: var(--corona-gold);
+      box-shadow: 0 0 16px var(--corona-gold-glow);
+    }
+
+    .day-cell.has-match .day-number {
+      color: #ffffff;
+      font-weight: 800;
+    }
+
+    .day-match-chip {
+      width: 100%;
+      font-size: 0.62rem;
+      font-weight: 700;
+      padding: 2px 4px;
+      border-radius: 6px;
+      background: rgba(250, 204, 21, 0.2);
+      color: var(--corona-gold);
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .day-status-dot {
+      position: absolute;
+      top: 7px;
+      right: 7px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+
+    .dot-disponibil { background: #10b981; box-shadow: 0 0 6px #10b981; }
+    .dot-curand { background: #f59e0b; }
+    .dot-epuizat { background: #ef4444; }
+
+    /* Panou Detalii Zi Selectată din Calendar */
+    .selected-match-drawer {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(4, 13, 28, 0.78);
+      border: 1px solid rgba(250, 204, 21, 0.45);
+      transition: all 0.2s ease;
+    }
+
+    .drawer-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .drawer-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .drawer-meta {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      line-height: 1.45;
+    }
+
+    .drawer-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-sm-gold {
+      flex: 1;
+      min-width: 155px;
+      text-align: center;
+      padding: 10px 14px;
+      border-radius: 11px;
+      background: var(--corona-gold);
+      color: #051124;
+      font-weight: 800;
+      font-size: 0.82rem;
+      text-decoration: none;
+    }
+
+    .btn-sm-ice {
+      padding: 10px 14px;
+      border-radius: 11px;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #e0f2fe;
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+
+    /* Lista compactă a tuturor meciurilor din sezon */
+    .upcoming-list-title {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-secondary);
+      margin: 18px 0 10px;
+      font-weight: 700;
+    }
+
+    .match-list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(6, 18, 36, 0.55);
+      border: 1px solid rgba(148, 210, 255, 0.12);
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+
+    .match-list-item:hover {
+      border-color: rgba(250, 204, 21, 0.45);
+      background: rgba(11, 31, 60, 0.72);
+    }
+
+    .match-list-date {
+      min-width: 54px;
+      text-align: center;
+      padding: 6px 8px;
+      border-radius: 10px;
+      background: rgba(0, 85, 165, 0.35);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+
+    .match-list-date .d-day {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--corona-gold);
+      line-height: 1;
+    }
+
+    .match-list-date .d-mon {
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      font-weight: 700;
+    }
+
+    .match-list-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .match-list-opp {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .match-list-sub {
+      font-size: 0.74rem;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    /* RADARUL DE ANUNȚURI & ȘTIRI BILETE */
+    .news-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .news-item {
+      display: block;
+      text-decoration: none;
+      padding: 15px;
+      border-radius: 16px;
+      background: rgba(6, 18, 36, 0.6);
+      border: 1px solid rgba(148, 210, 255, 0.14);
+      transition: all 0.18s ease;
+    }
+
+    .news-item:hover {
+      transform: translateY(-2px);
+      border-color: rgba(56, 189, 248, 0.45);
+      background: rgba(11, 30, 58, 0.78);
+    }
+
+    .news-item.ticket-alert {
+      border-color: rgba(250, 204, 21, 0.5);
+      background: linear-gradient(135deg, rgba(250, 204, 21, 0.09) 0%, rgba(7, 20, 40, 0.75) 100%);
+    }
+
+    .news-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 7px;
+    }
+
+    .badge-alert {
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-alert.urgent {
+      background: var(--corona-gold);
+      color: #061326;
+    }
+
+    .badge-alert.regular {
+      background: rgba(56, 189, 248, 0.18);
+      color: #7dd3fc;
+    }
+
+    .news-date {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .news-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.4;
+      margin-bottom: 9px;
+    }
+
+    .kw-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .kw-tag {
+      font-size: 0.66rem;
+      padding: 2px 7px;
+      border-radius: 5px;
+      background: rgba(148, 210, 255, 0.1);
+      color: var(--text-secondary);
+    }
+
+    /* Modal / Tab Ghid Configurare & Status */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 8, 18, 0.82);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 650px;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 24px;
+      background: var(--ice-glass-strong);
+      border: 1px solid rgba(250, 204, 21, 0.5);
+      border-radius: 24px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(148, 210, 255, 0.15);
+    }
+
+    .btn-close-modal {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: 1px solid rgba(148, 210, 255, 0.25);
+      background: rgba(15, 34, 64, 0.8);
+      color: #ffffff;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    .step-box {
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(5, 15, 32, 0.7);
+      border: 1px solid rgba(148, 210, 255, 0.14);
+      margin-bottom: 12px;
+    }
+
+    .step-box h4 {
+      font-size: 0.92rem;
+      color: var(--corona-gold);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .step-box p,
+    .step-box li {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .step-box ul {
+      padding-left: 18px;
+      margin-top: 5px;
+    }
+
+    .code-inline {
+      font-family: monospace;
+      background: rgba(56, 189, 248, 0.15);
+      color: #bae6fd;
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-size: 0.78rem;
+    }
+
+    .ntfy-tester {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .ntfy-input {
+      flex: 1;
+      min-width: 180px;
+      padding: 10px 13px;
+      border-radius: 10px;
+      border: 1px solid rgba(148, 210, 255, 0.3);
+      background: rgba(3, 10, 22, 0.85);
+      color: #ffffff;
+      font-size: 0.84rem;
+    }
+
+    .btn-test-push {
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: none;
+      background: var(--corona-gold);
+      color: #041022;
+      font-weight: 800;
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+
+    /* Bottom Dock Bar pentru iPhone 12 */
+    .iphone-bottom-bar {
+      position: fixed;
+      bottom: calc(var(--safe-bottom) + 12px);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+      width: calc(100% - 32px);
+      max-width: 460px;
+      padding: 8px;
+      border-radius: 20px;
+      background: rgba(6, 18, 36, 0.88);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border: 1px solid rgba(148, 210, 255, 0.22);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.75);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+    }
+
+    .dock-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      padding: 7px 4px;
+      border-radius: 13px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.68rem;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .dock-item.active,
+    .dock-item:hover {
+      background: rgba(0, 85, 165, 0.4);
+      color: var(--corona-gold);
+    }
+
+    .dock-icon {
+      font-size: 1.1rem;
+    }
+
+    /* Bannere de stare a datelor & verificare sursă */
+    .data-notice {
+      display: none;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+      border-radius: 16px;
+      font-size: 0.84rem;
+      line-height: 1.5;
+    }
+    .data-notice.show { display: block; }
+    .data-notice.warn {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      color: #fde68a;
+    }
+    .data-notice.error {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.45);
+      color: #fecaca;
+    }
+    .data-notice a { color: #facc15; font-weight: 700; }
+
+    .verify-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+    }
+    .verify-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 7px;
+      font-weight: 700;
+      font-size: 0.72rem;
+    }
+    .verify-badge.ok {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      color: #6ee7b7;
+    }
+    .verify-badge.generic {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      color: #fcd34d;
+    }
+    .verify-badge.gone {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.45);
+      color: #fca5a5;
+    }
+
+    .hero-empty {
+      text-align: center;
+      padding: 18px 6px 4px;
+    }
+    .hero-empty h3 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+    }
+    .hero-empty p {
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+
+    /* Responsive Mobile & iPhone 12 (390px width) */
+    @media (max-width: 860px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero-meta-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .hero-cta-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 440px) {
+      .app-container {
+        padding: 0 12px;
+      }
+      .hero-card {
+        padding: 18px 15px;
+      }
+      .hero-matchup {
+        padding: 13px 10px;
+        gap: 8px;
+      }
+      .team-avatar {
+        width: 50px;
+        height: 50px;
+        font-size: 1.15rem;
+      }
+      .team-name {
+        font-size: 1.02rem;
+      }
+      .day-cell {
+        min-height: 54px;
+        padding: 4px 3px;
+      }
+      .section-card {
+        padding: 16px 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Fulgi de gheață & scântei pe patinoar -->
+  <canvas id="ice-canvas" aria-hidden="true"></canvas>
+
+  <div class="app-container">
+    <!-- TOP BAR -->
+    <header class="ice-card top-header">
+      <div class="brand-wrap">
+        <div class="brand-crest">🏒</div>
+        <div>
+          <h1 class="brand-title">Corona Ice Tracker</h1>
+          <div class="brand-subtitle">
+            <span>CSM Corona Brașov • Patinoarul Olimpic</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button type="button" class="live-pill" id="btn-status-pill" title="Vezi starea monitorizării automate">
+          <span class="pulse-dot"></span>
+          <span id="last-checked-text">Verificat recent</span>
+        </button>
+        <button type="button" class="btn-config" id="btn-open-guide">
+          <span>📲 Alerte iPhone & Setup</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Banner stare date (date lipsă / bot neconfigurat / sursă blocată) -->
+    <div class="data-notice" id="data-notice" role="status"></div>
+
+    <!-- a) HERO CARD: URMĂTORUL MECI LA PATINOARUL OLIMPIC (randat din JS doar cu date reale) -->
+    <section class="ice-card hero-card" id="sec-hero">
+      <div id="hero-root">
+        <div class="hero-empty">
+          <h3>Se încarcă datele…</h3>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAIN GRID: CALENDAR LUNAR INTERACTIV + RADAR ȘTIRI -->
+    <div class="main-grid">
+      <!-- b) CALENDARUL SEZONULUI -->
+      <section class="ice-card section-card" id="sec-calendar">
+        <div class="section-header">
+          <h2 class="section-title">📅 Calendarul Sezonului</h2>
+          <span style="font-size: 0.75rem; color: var(--text-secondary);">Click pe o zi marcată</span>
+        </div>
+
+        <!-- Filtre pe competiții -->
+        <div class="filter-pills" role="tablist" aria-label="Filtru competiții">
+          <button type="button" class="filter-btn active" data-comp="Toate">Toate Competițiile</button>
+          <button type="button" class="filter-btn" data-comp="Erste Liga">Erste Liga</button>
+          <button type="button" class="filter-btn" data-comp="Campionatul Național">Campionatul Național</button>
+          <button type="button" class="filter-btn" data-comp="Cupa României">Cupa României</button>
+        </div>
+
+        <!-- Navigare lună -->
+        <div class="calendar-nav">
+          <button type="button" class="cal-arrow" id="cal-prev" aria-label="Luna anterioară">◀</button>
+          <div class="month-label" id="cal-month-label">Noiembrie 2026</div>
+          <button type="button" class="cal-arrow" id="cal-next" aria-label="Luna următoare">▶</button>
+        </div>
+
+        <!-- Zilele săptămânii (Luni - Duminică) -->
+        <div class="weekdays-grid">
+          <div class="weekday-cell">Lun</div>
+          <div class="weekday-cell">Mar</div>
+          <div class="weekday-cell">Mie</div>
+          <div class="weekday-cell">Joi</div>
+          <div class="weekday-cell">Vin</div>
+          <div class="weekday-cell">Sâm</div>
+          <div class="weekday-cell">Dum</div>
+        </div>
+
+        <!-- Zilele lunii -->
+        <div class="days-grid" id="calendar-days-grid"></div>
+
+        <!-- Detalii meci selectat din calendar -->
+        <div class="selected-match-drawer" id="selected-match-drawer"></div>
+
+        <!-- Lista rapidă a meciurilor filtrate -->
+        <div class="upcoming-list-title">Toate meciurile programate (Filtru activ)</div>
+        <div id="filtered-matches-list"></div>
+      </section>
+
+      <!-- c) RADARUL DE ANUNȚURI & ȘTIRI BILETE -->
+      <section class="ice-card section-card" id="sec-radar">
+        <div class="section-header">
+          <h2 class="section-title">📡 Radar Știri & Bilete</h2>
+          <a
+            href="https://www.coronabrasov.ro"
+            target="_blank"
+            rel="noopener noreferrer"
+            style="font-size: 0.76rem; color: var(--corona-cyan); text-decoration: none; font-weight: 600;"
+          >
+            coronabrasov.ro ↗
+          </a>
+        </div>
+
+        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.45;">
+          Botul scanează automat articolele cu cuvinte-cheie (<span class="code-inline">bilete</span>, <span class="code-inline">punem în vânzare</span>, <span class="code-inline">patinoar</span>, <span class="code-inline">erste</span>) la fiecare 10 minute.
+        </p>
+
+        <div class="news-list" id="news-radar-list"></div>
+      </section>
+    </div>
+  </div>
+
+  <!-- d) PANOU DE STATUS & GHID RAPID DE CONFIGURARE (MODAL) -->
+  <div class="modal-backdrop" id="config-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="section-title" id="modal-title">⚙️ Status Bot & Ghid Alerte iPhone 12</h3>
+        <button type="button" class="btn-close-modal" id="btn-close-modal" aria-label="Închide">✕</button>
+      </div>
+
+      <div class="step-box" style="border-color: rgba(16, 185, 129, 0.4);">
+        <h4>🟢 Status Monitorizare Cloud (GitHub Actions)</h4>
+        <p>
+          Ultima verificare automată: <strong id="modal-last-checked" style="color: #ffffff;">—</strong><br />
+          <span id="modal-sources">—</span><br />
+          Frecvență rulare: <strong>La fiecare 10 minute</strong> (08:00 – 23:00 ora României, 0 tokenuri AI consumate).
+          Când nu se schimbă nimic, ora verificării se actualizează o dată pe oră.
+        </p>
+      </div>
+
+      <div class="step-box">
+        <h4>🚀 Pasul 1: Publicare pe GitHub & Activare GitHub Pages</h4>
+        <ul>
+          <li>Urcă acest folder într-un repository pe contul tău de GitHub.</li>
+          <li>Mergi în <strong>Settings → Pages</strong> și la <em>Source</em> alege branch-ul <span class="code-inline">main</span> (folderul <span class="code-inline">/ (root)</span>).</li>
+          <li>Deschide link-ul generat în <strong>Safari pe iPhone 12</strong>, apasă pe butonul <strong>Share (Partajare)</strong> și selectează <strong>„Add to Home Screen” (Adaugă la ecranul principal)</strong> pentru experiență completă PWA!</li>
+        </ul>
+      </div>
+
+      <div class="step-box">
+        <h4>📲 Pasul 2: Alerte Instant pe iPhone cu ntfy.sh (Fără cont)</h4>
+        <ul>
+          <li>Instalează aplicația gratuită <strong>ntfy</strong> din App Store pe iPhone 12.</li>
+          <li>Apasă <strong>„+”</strong> și abonează-te la un topic unic ales de tine (ex: <span class="code-inline">corona-hochei-bv-2026</span>).</li>
+          <li>În GitHub, mergi la <strong>Settings → Secrets and variables → Actions → New repository secret</strong>:
+            <br />Nume: <span class="code-inline">NTFY_TOPIC</span> | Valoare: <span class="code-inline">corona-hochei-bv-2026</span>
+          </li>
+        </ul>
+        <div class="ntfy-tester">
+          <input
+            type="text"
+            id="ntfy-test-topic"
+            class="ntfy-input"
+            placeholder="Introdu topicul tău ntfy (ex: corona-hochei-bv)"
+          />
+          <button type="button" class="btn-test-push" id="btn-send-ntfy-test">
+            🔔 Trimite Notificare Test
+          </button>
+        </div>
+        <div id="ntfy-test-feedback" style="font-size: 0.76rem; margin-top: 6px; color: #34d399;"></div>
+      </div>
+
+      <div class="step-box">
+        <h4>✈️ Opțional: Alerte prin Telegram Bot API</h4>
+        <ul>
+          <li>Creează un bot prin <span class="code-inline">@BotFather</span> pe Telegram și copiază token-ul.</li>
+          <li>Adaugă în <strong>GitHub Actions Secrets</strong> variabilele <span class="code-inline">TELEGRAM_BOT_TOKEN</span> și <span class="code-inline">TELEGRAM_CHAT_ID</span>.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM DOCK BAR PENTRU IPHONE 12 -->
+  <nav class="iphone-bottom-bar" aria-label="Navigare rapidă">
+    <a href="#sec-hero" class="dock-item active">
+      <span class="dock-icon">🏒</span>
+      <span>Meci</span>
+    </a>
+    <a href="#sec-calendar" class="dock-item">
+      <span class="dock-icon">📅</span>
+      <span>Calendar</span>
+    </a>
+    <a href="#sec-radar" class="dock-item">
+      <span class="dock-icon">📡</span>
+      <span>Știri Bilete</span>
+    </a>
+    <button type="button" class="dock-item" id="dock-open-guide">
+      <span class="dock-icon">📲</span>
+      <span>Alerte iOS</span>
+    </button>
+  </nav>
+
+  <script>
+    /**
+     * Corona Ice Tracker — logica interfeței.
+     * IMPORTANT: interfața afișează EXCLUSIV date găsite de bot pe Eventim / coronabrasov.ro
+     * (data/matches.json). Nu există date demo / inventate.
+     */
+    const EVENTIM_ARTIST_URL =
+      'https://www.eventim.ro/artist/csm-corona-brasov/csm-corona-brasov-hochei-4277387/?affiliate=ROF';
+    const CORONA_SITE_URL = 'https://www.coronabrasov.ro';
+
+    const MONTHS_RO = [
+      'Ianuarie', 'Februarie', 'Martie', 'Aprilie', 'Mai', 'Iunie',
+      'Iulie', 'August', 'Septembrie', 'Octombrie', 'Noiembrie', 'Decembrie'
+    ];
+    const MONTHS_SHORT_RO = ['Ian', 'Feb', 'Mar', 'Apr', 'Mai', 'Iun', 'Iul', 'Aug', 'Sep', 'Oct', 'Noi', 'Dec'];
+
+    const today = new Date();
+    const appState = {
+      data: { lastChecked: null, sources: {}, matches: [], news: [] },
+      loadError: null,
+      activeCompetition: 'Toate',
+      calYear: today.getFullYear(),
+      calMonth: today.getMonth(),
+      selectedMatch: null,
+      heroMatch: null
+    };
+
+    // ------------------------------------------------------------------ utilitare
+    function esc(str) {
+      return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    /** Acceptă doar link-uri https către domeniile cunoscute; altfel pagina oficială Eventim. */
+    function safeUrl(url, fallback = EVENTIM_ARTIST_URL) {
+      try {
+        const u = new URL(url);
+        if (u.protocol === 'https:' && /(^|\.)(eventim\.ro|coronabrasov\.ro)$/.test(u.hostname)) return u.href;
+      } catch (_) {}
+      return fallback;
+    }
+
+    function localIsoDate(d = new Date()) {
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    function formatRoDate(dateStr) {
+      if (!dateStr) return 'Dată necunoscută';
+      const [y, m, d] = dateStr.split('-').map(Number);
+      if (!y || !m || !d) return dateStr;
+      return `${d} ${MONTHS_RO[m - 1]} ${y}`;
+    }
+
+    function formatDateTime(iso) {
+      if (!iso) return '—';
+      const dt = new Date(iso);
+      if (isNaN(dt.getTime())) return iso;
+      return dt.toLocaleString('ro-RO', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+    }
+
+    function getInitials(name = '') {
+      const words = String(name).replace(/[^\p{L}\p{N} ]/gu, ' ').trim().split(/\s+/).filter(Boolean);
+      if (!words.length) return '?';
+      if (words.length === 1) return words[0].slice(0, 3).toUpperCase();
+      return words.slice(0, 3).map((w) => w[0]).join('').toUpperCase();
+    }
+
+    function getCountdownText(dateStr, timeStr) {
+      const target = new Date(`${dateStr}T${timeStr || '00:00'}:00`);
+      const diffMs = target - new Date();
+      if (isNaN(diffMs)) return 'Programat';
+      if (!timeStr) {
+        const days = Math.round((new Date(`${dateStr}T00:00:00`) - new Date(`${localIsoDate()}T00:00:00`)) / 86400000);
+        return days === 0 ? 'Azi' : days > 0 ? `Peste ${days} zile` : 'Încheiat';
+      }
+      if (diffMs <= 0 && diffMs > -3 * 3600 * 1000) return '🔴 ÎN DESFĂȘURARE';
+      if (diffMs < 0) return 'Meci încheiat';
+      const days = Math.floor(diffMs / 86400000);
+      const hours = Math.floor((diffMs / 3600000) % 24);
+      return days > 0 ? `Peste ${days}z ${hours}h` : `Azi, în ${hours}h`;
+    }
+
+    function statusClass(status) {
+      if (status === 'Disponibil') return 'status-disponibil';
+      if (status === 'Epuizat') return 'status-epuizat';
+      return 'status-curand';
+    }
+
+    function statusLabel(m) {
+      if (m.stillListed === false) return '⚠️ Nu mai apare pe Eventim';
+      if (m.status === 'Disponibil') return '● Bilete Disponibile';
+      if (m.status === 'Epuizat') return '✕ Epuizat';
+      if (m.status === 'În curând') return '⏳ Bilete În Curând';
+      return '? Status necunoscut';
+    }
+
+    /** Badge care arată clar de unde vine meciul și unde duce butonul. */
+    function verifyBadge(m) {
+      if (m.stillListed === false) {
+        return `<span class="verify-badge gone">⚠️ Nu mai este listat pe Eventim — verifică manual</span>`;
+      }
+      if (m.ticketUrlIsDirect) {
+        return `<span class="verify-badge ok">✔ Găsit pe Eventim • link direct către eveniment</span>`;
+      }
+      return `<span class="verify-badge generic">ℹ Găsit pe Eventim • link către pagina generală Corona</span>`;
+    }
+
+    function ticketButtonLabel(m) {
+      if (m.ticketUrlIsDirect && m.status !== 'Epuizat') return '🎟️ Cumpără Bilete pe Eventim';
+      if (m.ticketUrlIsDirect) return '🔎 Vezi evenimentul pe Eventim';
+      return '🔎 Caută meciul pe pagina Eventim';
+    }
+
+    // ------------------------------------------------------------------ .ics
+    function downloadIcsForMatch(match) {
+      if (!match || !match.date) return;
+      const [year, month, day] = match.date.split('-').map(Number);
+      const hasTime = Boolean(match.time);
+      const [hour, minute] = (match.time || '00:00').split(':').map(Number);
+      const pad = (n) => String(n).padStart(2, '0');
+      const icsEsc = (s) => String(s ?? '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+
+      const start = new Date(year, month - 1, day, hour, minute);
+      const end = new Date(start.getTime() + 2.5 * 3600 * 1000);
+      const fmt = (dt) => `${dt.getFullYear()}${pad(dt.getMonth() + 1)}${pad(dt.getDate())}T${pad(dt.getHours())}${pad(dt.getMinutes())}00`;
+      const now = new Date();
+      const stamp = `${now.getUTCFullYear()}${pad(now.getUTCMonth() + 1)}${pad(now.getUTCDate())}T${pad(now.getUTCHours())}${pad(now.getUTCMinutes())}00Z`;
+      const ticketUrl = safeUrl(match.ticketUrl);
+
+      const lines = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Corona Ice Tracker//RO',
+        'CALSCALE:GREGORIAN',
+        'METHOD:PUBLISH',
+        'BEGIN:VTIMEZONE',
+        'TZID:Europe/Bucharest',
+        'BEGIN:STANDARD',
+        'DTSTART:19701025T040000',
+        'RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU',
+        'TZOFFSETFROM:+0300',
+        'TZOFFSETTO:+0200',
+        'TZNAME:EET',
+        'END:STANDARD',
+        'BEGIN:DAYLIGHT',
+        'DTSTART:19700329T030000',
+        'RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU',
+        'TZOFFSETFROM:+0200',
+        'TZOFFSETTO:+0300',
+        'TZNAME:EEST',
+        'END:DAYLIGHT',
+        'END:VTIMEZONE',
+        'BEGIN:VEVENT',
+        `UID:${icsEsc(match.id)}@corona-ice-tracker`,
+        `DTSTAMP:${stamp}`,
+        hasTime ? `DTSTART;TZID=Europe/Bucharest:${fmt(start)}` : `DTSTART;VALUE=DATE:${year}${pad(month)}${pad(day)}`,
+        hasTime ? `DTEND;TZID=Europe/Bucharest:${fmt(end)}` : null,
+        `SUMMARY:${icsEsc('🏒 ' + match.title)}`,
+        `LOCATION:${icsEsc(match.location || 'Patinoarul Olimpic Brașov')}`,
+        `DESCRIPTION:${icsEsc(`${match.competition || 'Hochei'}\nBilete: ${ticketUrl}`)}`,
+        `URL:${ticketUrl}`,
+        'BEGIN:VALARM',
+        hasTime ? 'TRIGGER:-PT2H' : 'TRIGGER:PT10H',
+        'ACTION:DISPLAY',
+        `DESCRIPTION:${icsEsc(hasTime ? `${match.title} începe în 2 ore!` : `Azi: ${match.title}`)}`,
+        'END:VALARM',
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].filter(Boolean);
+
+      const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `corona-${match.date}.ics`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+    }
+
+    // ------------------------------------------------------------------ banner stare
+    function renderDataNotice() {
+      const el = document.getElementById('data-notice');
+      const d = appState.data;
+      let html = '';
+      let cls = 'warn';
+
+      if (appState.loadError) {
+        cls = 'error';
+        html = location.protocol === 'file:'
+          ? `<strong>Pagina e deschisă direct din fișier</strong>, așa că browserul nu poate citi <code>data/matches.json</code>.
+             Deschide-o prin GitHub Pages sau un server local (<code>npx serve .</code>).
+             Până atunci, verifică direct pe <a href="${EVENTIM_ARTIST_URL}" target="_blank" rel="noopener">Eventim</a>.`
+          : `<strong>Nu am putut încărca datele</strong> (${esc(appState.loadError)}).
+             Verifică direct pe <a href="${EVENTIM_ARTIST_URL}" target="_blank" rel="noopener">Eventim</a>.`;
+      } else if (!d.lastChecked) {
+        html = `<strong>Botul nu a rulat încă.</strong> Lista se va umple automat după prima rulare din GitHub Actions
+                (vezi <em>📲 Alerte iPhone &amp; Setup</em>). Nu sunt afișate meciuri inventate.`;
+      } else if (d.sources?.eventim && d.sources.eventim.ok === false) {
+        cls = 'error';
+        html = `<strong>Ultima verificare Eventim a eșuat</strong> (${esc(d.sources.eventim.error || 'eroare necunoscută')}).
+                Datele de mai jos pot fi învechite — confirmă pe <a href="${EVENTIM_ARTIST_URL}" target="_blank" rel="noopener">Eventim</a>.`;
+      } else if (Date.now() - new Date(d.lastChecked).getTime() > 3 * 3600 * 1000) {
+        html = `<strong>Datele sunt mai vechi de 3 ore</strong> (ultima verificare: ${esc(formatDateTime(d.lastChecked))}).
+                Posibil ca botul să fie oprit noaptea (23:00–08:00) sau workflow-ul să fi eșuat.`;
+      }
+
+      el.className = `data-notice ${cls}${html ? ' show' : ''}`;
+      el.innerHTML = html;
+    }
+
+    // ------------------------------------------------------------------ hero
+    function getUpcomingMatches() {
+      const todayIso = localIsoDate();
+      return (appState.data.matches || [])
+        .filter((m) => m.date && m.date >= todayIso)
+        .sort((a, b) => `${a.date} ${a.time || ''}`.localeCompare(`${b.date} ${b.time || ''}`));
+    }
+
+    function renderHeroCard() {
+      const root = document.getElementById('hero-root');
+      const upcoming = getUpcomingMatches();
+      const m = upcoming.find((x) => x.stillListed !== false) || upcoming[0];
+      appState.heroMatch = m || null;
+
+      if (!m) {
+        root.innerHTML = `
+          <div class="hero-empty">
+            <h3>Niciun meci viitor detectat pe Eventim</h3>
+            <p>Botul nu a găsit încă meciuri programate cu bilete pe Eventim${appState.data.lastChecked ? '' : ' (nu a rulat încă)'}.
+               Vei primi notificare pe telefon imediat ce apare unul.</p>
+            <a href="${EVENTIM_ARTIST_URL}" target="_blank" rel="noopener noreferrer" class="btn-primary-ticket">
+              🔎 Verifică manual pagina Eventim Corona
+            </a>
+          </div>`;
+        return;
+      }
+
+      const url = safeUrl(m.ticketUrl);
+      root.innerHTML = `
+        <div class="hero-top-row">
+          <div class="hero-badge-group">
+            <span class="badge-next">🔥 Următorul Meci</span>
+            <span class="badge-comp">${esc(m.competition || 'Hochei')}</span>
+          </div>
+          <span class="status-pill ${m.stillListed === false ? 'status-epuizat' : statusClass(m.status)}">${esc(statusLabel(m))}</span>
+        </div>
+
+        <div class="verify-line">
+          ${verifyBadge(m)}
+          <span>Detectat de bot: ${esc(formatDateTime(m.firstSeen))}</span>
+        </div>
+
+        <div class="hero-matchup">
+          <div class="team-block">
+            <div class="team-avatar corona">BV</div>
+            <div class="team-name">CSM Corona Brașov</div>
+            <div class="team-tag">Gazde</div>
+          </div>
+          <div class="vs-divider">
+            <div class="vs-circle">VS</div>
+            <div class="countdown-chip">${esc(getCountdownText(m.date, m.time))}</div>
+          </div>
+          <div class="team-block">
+            <div class="team-avatar guest">${esc(getInitials(m.opponent || '?'))}</div>
+            <div class="team-name">${esc(m.opponent || m.title)}</div>
+            <div class="team-tag">Oaspeți</div>
+          </div>
+        </div>
+
+        <div class="hero-meta-grid">
+          <div class="meta-box"><div class="meta-label">📅 Data</div><div class="meta-val">${esc(formatRoDate(m.date))}</div></div>
+          <div class="meta-box"><div class="meta-label">⏰ Ora</div><div class="meta-val">${esc(m.time || 'Vezi pe Eventim')}</div></div>
+          <div class="meta-box"><div class="meta-label">📍 Arena</div><div class="meta-val">${esc(m.location || 'Patinoarul Olimpic Brașov')}</div></div>
+          <div class="meta-box"><div class="meta-label">🏷️ Preț de la</div><div class="meta-val gold">${esc(m.startingPrice || 'Vezi pe Eventim')}</div></div>
+        </div>
+
+        <div class="hero-cta-row">
+          <a href="${esc(url)}" target="_blank" rel="noopener noreferrer" class="btn-primary-ticket">${esc(ticketButtonLabel(m))}</a>
+          <button type="button" class="btn-secondary-ics" id="hero-ics-btn">📅 Adaugă în Calendarul iPhone (.ics)</button>
+        </div>`;
+
+      document.getElementById('hero-ics-btn').addEventListener('click', () => downloadIcsForMatch(m));
+    }
+
+    // ------------------------------------------------------------------ calendar
+    function getFilteredMatches() {
+      const all = appState.data.matches || [];
+      if (appState.activeCompetition === 'Toate') return all;
+      return all.filter((m) => m.competition === appState.activeCompetition);
+    }
+
+    function renderCalendar() {
+      const { calYear: year, calMonth: month } = appState;
+      document.getElementById('cal-month-label').textContent = `${MONTHS_RO[month]} ${year}`;
+
+      const filtered = getFilteredMatches();
+      const byDate = new Map(filtered.map((m) => [m.date, m]));
+      const startOffset = (new Date(year, month, 1).getDay() + 6) % 7; // Luni = 0
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const todayIso = localIsoDate();
+
+      const grid = document.getElementById('calendar-days-grid');
+      grid.innerHTML = '';
+
+      for (let i = 0; i < startOffset; i++) {
+        const empty = document.createElement('div');
+        empty.className = 'day-cell empty';
+        grid.appendChild(empty);
+      }
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const iso = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const match = byDate.get(iso);
+        const cell = document.createElement('div');
+        cell.className = 'day-cell' + (iso === todayIso ? ' today' : '');
+
+        const num = document.createElement('span');
+        num.className = 'day-number';
+        num.textContent = day;
+        cell.appendChild(num);
+
+        if (match) {
+          cell.classList.add('has-match');
+          if (appState.selectedMatch && appState.selectedMatch.id === match.id) cell.classList.add('selected');
+
+          const dot = document.createElement('span');
+          dot.className = 'day-status-dot ' + (match.status === 'Disponibil' && match.stillListed !== false
+            ? 'dot-disponibil' : match.status === 'Epuizat' || match.stillListed === false ? 'dot-epuizat' : 'dot-curand');
+          cell.appendChild(dot);
+
+          const chip = document.createElement('div');
+          chip.className = 'day-match-chip';
+          chip.textContent = (match.opponent || match.title).split(' ')[0];
+          cell.appendChild(chip);
+
+          cell.addEventListener('click', () => {
+            appState.selectedMatch = match;
+            renderCalendar();
+          });
+        }
+        grid.appendChild(cell);
+      }
+
+      renderSelectedMatchDrawer();
+      renderFilteredMatchesList(filtered);
+    }
+
+    function renderSelectedMatchDrawer() {
+      const drawer = document.getElementById('selected-match-drawer');
+      const m = appState.selectedMatch;
+
+      if (!m) {
+        const any = getFilteredMatches().length > 0;
+        drawer.innerHTML = `<div style="font-size:0.84rem;color:var(--text-secondary);">
+          ${any ? 'Apasă pe o zi marcată din calendar sau pe un meci din listă.' : 'Niciun meci detectat pe Eventim pentru acest filtru.'}</div>`;
+        return;
+      }
+
+      const url = safeUrl(m.ticketUrl);
+      drawer.innerHTML = `
+        <div class="drawer-top">
+          <div class="drawer-title">🏒 ${esc(m.title)}</div>
+          <span class="status-pill ${m.stillListed === false ? 'status-epuizat' : statusClass(m.status)}" style="font-size:0.72rem;padding:3px 10px;">
+            ${esc(m.stillListed === false ? 'Nelistat' : m.status || 'Necunoscut')}
+          </span>
+        </div>
+        <div class="verify-line">${verifyBadge(m)}</div>
+        <div class="drawer-meta">
+          🏆 <strong>${esc(m.competition || 'Hochei')}</strong> • 📅 ${esc(formatRoDate(m.date))}${m.time ? ` la ora <strong>${esc(m.time)}</strong>` : ''}<br/>
+          📍 ${esc(m.location || 'Patinoarul Olimpic Brașov')} • 💰 Preț de la:
+          <strong style="color:var(--corona-gold)">${esc(m.startingPrice || 'vezi pe Eventim')}</strong>
+        </div>
+        <div class="drawer-actions">
+          <a href="${esc(url)}" target="_blank" rel="noopener noreferrer" class="btn-sm-gold">${esc(ticketButtonLabel(m))}</a>
+          <button type="button" class="btn-sm-ice" id="drawer-ics-btn">📅 Salvează .ics (iPhone)</button>
+        </div>`;
+
+      document.getElementById('drawer-ics-btn').addEventListener('click', () => downloadIcsForMatch(m));
+    }
+
+    function renderFilteredMatchesList(matches) {
+      const container = document.getElementById('filtered-matches-list');
+      if (!matches.length) {
+        container.innerHTML = `<div style="font-size:0.82rem;color:var(--text-muted);">Niciun meci detectat pe Eventim în această categorie.</div>`;
+        return;
+      }
+
+      container.innerHTML = matches
+        .map((m) => {
+          const [, mon, day] = m.date.split('-').map(Number);
+          const gone = m.stillListed === false;
+          return `
+            <div class="match-list-item" data-match-id="${esc(m.id)}">
+              <div class="match-list-date">
+                <div class="d-day">${day}</div>
+                <div class="d-mon">${MONTHS_SHORT_RO[(mon || 1) - 1]}</div>
+              </div>
+              <div class="match-list-info">
+                <div class="match-list-opp">vs. ${esc(m.opponent || m.title)}</div>
+                <div class="match-list-sub">${esc(m.competition || 'Hochei')}${m.time ? ' • Ora ' + esc(m.time) : ''}${m.startingPrice ? ' • ' + esc(m.startingPrice) : ''}${m.ticketUrlIsDirect ? ' • ✔ link direct' : ''}</div>
+              </div>
+              <span class="status-pill ${gone ? 'status-epuizat' : statusClass(m.status)}" style="font-size:0.7rem;padding:4px 9px;">
+                ${esc(gone ? 'Nelistat' : m.status || '?')}
+              </span>
+            </div>`;
+        })
+        .join('');
+
+      container.querySelectorAll('.match-list-item').forEach((item) => {
+        item.addEventListener('click', () => {
+          const found = matches.find((m) => m.id === item.getAttribute('data-match-id'));
+          if (!found) return;
+          const [y, mo] = found.date.split('-').map(Number);
+          appState.calYear = y;
+          appState.calMonth = mo - 1;
+          appState.selectedMatch = found;
+          renderCalendar();
+          document.getElementById('selected-match-drawer').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+      });
+    }
+
+    // ------------------------------------------------------------------ radar știri
+    function renderNewsRadar() {
+      const list = document.getElementById('news-radar-list');
+      const news = appState.data.news || [];
+      if (!news.length) {
+        list.innerHTML = `<div style="font-size:0.84rem;color:var(--text-secondary);">
+          Niciun articol detectat încă. <a href="${CORONA_SITE_URL}" target="_blank" rel="noopener" style="color:var(--corona-cyan)">Deschide coronabrasov.ro ↗</a></div>`;
+        return;
+      }
+      list.innerHTML = news
+        .map((n) => {
+          const alert = Boolean(n.isTicketAlert);
+          const kws = (n.keywordsMatched || []).map((k) => `<span class="kw-tag">#${esc(k)}</span>`).join('');
+          return `
+            <a href="${esc(safeUrl(n.url, CORONA_SITE_URL))}" target="_blank" rel="noopener noreferrer" class="news-item ${alert ? 'ticket-alert' : ''}">
+              <div class="news-top">
+                <span class="badge-alert ${alert ? 'urgent' : 'regular'}">${alert ? '🎟️ Alertă Bilete' : '🏒 Știre Hochei'}</span>
+                <span class="news-date">detectat ${esc(formatDateTime(n.firstSeen))}</span>
+              </div>
+              <div class="news-title">${esc(n.title)}</div>
+              <div class="kw-wrap">${kws}</div>
+            </a>`;
+        })
+        .join('');
+    }
+
+    // ------------------------------------------------------------------ status
+    function renderLastChecked() {
+      const d = appState.data;
+      const formatted = d.lastChecked ? formatDateTime(d.lastChecked) : 'niciodată';
+      document.getElementById('last-checked-text').textContent = d.lastChecked ? `Bot • ${formatted}` : 'Bot neactivat';
+      document.getElementById('modal-last-checked').textContent = formatted;
+
+      const srcLine = (s, name) =>
+        !s || s.ok === null || s.ok === undefined
+          ? `${name}: —`
+          : s.ok
+          ? `${name}: ✅ OK (${s.found} găsite)`
+          : `${name}: ❌ ${esc(s.error || 'eroare')}`;
+      document.getElementById('modal-sources').innerHTML =
+        `${srcLine(d.sources?.eventim, 'Eventim')}<br/>${srcLine(d.sources?.coronabrasov, 'coronabrasov.ro')}`;
+    }
+
+    // ------------------------------------------------------------------ încărcare
+    async function loadMatchesData() {
+      try {
+        const res = await fetch(`./data/matches.json?t=${Date.now()}`, { cache: 'no-store' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+        appState.data = {
+          lastChecked: json.lastChecked || null,
+          sources: json.sources || {},
+          // Afișăm doar meciuri provenite de pe Eventim, cu dată validă
+          matches: (json.matches || []).filter((m) => m && m.source === 'eventim' && /^\d{4}-\d{2}-\d{2}$/.test(m.date)),
+          news: (json.news || []).filter((n) => n && n.source === 'coronabrasov.ro')
+        };
+      } catch (err) {
+        appState.loadError = err.message || 'eroare de rețea';
+      }
+
+      const first = getUpcomingMatches()[0];
+      if (first) {
+        const [y, m] = first.date.split('-').map(Number);
+        appState.calYear = y;
+        appState.calMonth = m - 1;
+        appState.selectedMatch = first;
+      }
+
+      renderDataNotice();
+      renderLastChecked();
+      renderHeroCard();
+      renderCalendar();
+      renderNewsRadar();
+    }
+
+    // ------------------------------------------------------------------ evenimente
+    function initEvents() {
+      document.getElementById('cal-prev').addEventListener('click', () => {
+        appState.calMonth = (appState.calMonth + 11) % 12;
+        if (appState.calMonth === 11) appState.calYear--;
+        renderCalendar();
+      });
+      document.getElementById('cal-next').addEventListener('click', () => {
+        appState.calMonth = (appState.calMonth + 1) % 12;
+        if (appState.calMonth === 0) appState.calYear++;
+        renderCalendar();
+      });
+
+      document.querySelectorAll('.filter-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          appState.activeCompetition = btn.getAttribute('data-comp') || 'Toate';
+          const todayIso = localIsoDate();
+          const filtered = getFilteredMatches();
+          appState.selectedMatch = filtered.find((m) => m.date >= todayIso) || filtered[0] || null;
+          renderCalendar();
+        });
+      });
+
+      const modal = document.getElementById('config-modal');
+      const openModal = () => modal.classList.add('open');
+      const closeModal = () => modal.classList.remove('open');
+      ['btn-open-guide', 'btn-status-pill', 'dock-open-guide'].forEach((id) =>
+        document.getElementById(id).addEventListener('click', openModal)
+      );
+      document.getElementById('btn-close-modal').addEventListener('click', closeModal);
+      modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+      // Dock: evidențiază secțiunea activă
+      document.querySelectorAll('.iphone-bottom-bar a.dock-item').forEach((a) => {
+        a.addEventListener('click', () => {
+          document.querySelectorAll('.dock-item').forEach((d) => d.classList.remove('active'));
+          a.classList.add('active');
+        });
+      });
+
+      // Test ntfy.sh din interfață
+      document.getElementById('btn-send-ntfy-test').addEventListener('click', async () => {
+        const topic = document.getElementById('ntfy-test-topic').value.trim();
+        const fb = document.getElementById('ntfy-test-feedback');
+        if (!topic) {
+          fb.style.color = '#fbbf24';
+          fb.textContent = '⚠️ Introdu mai întâi numele topicului ntfy.';
+          return;
+        }
+        fb.style.color = '#7dd3fc';
+        fb.textContent = '⏳ Se trimite...';
+        try {
+          const res = await fetch(`https://ntfy.sh/${encodeURIComponent(topic)}`, {
+            method: 'POST',
+            headers: { Title: 'Corona Ice Tracker - Test', Priority: 'high', Tags: 'ice_hockey,ticket', Click: EVENTIM_ARTIST_URL },
+            body: 'Alertele pentru meciurile de hochei CSM Corona Brașov funcționează!'
+          });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          fb.style.color = '#34d399';
+          fb.textContent = `✅ Trimis pe "${topic}". Verifică aplicația ntfy.`;
+        } catch (err) {
+          fb.style.color = '#f87171';
+          fb.textContent = `❌ Eroare: ${err.message}`;
+        }
+      });
+    }
+
+    // ------------------------------------------------------------------ fulgi de gheață
+    function initIceParticles() {
+      const canvas = document.getElementById('ice-canvas');
+      if (!canvas || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const ctx = canvas.getContext('2d');
+      let w = (canvas.width = innerWidth);
+      let h = (canvas.height = innerHeight);
+      addEventListener('resize', () => { w = canvas.width = innerWidth; h = canvas.height = innerHeight; });
+
+      const particles = Array.from({ length: innerWidth < 500 ? 28 : 50 }, () => ({
+        x: Math.random() * w, y: Math.random() * h, r: Math.random() * 2.2 + 0.6,
+        vx: (Math.random() - 0.5) * 0.35, vy: Math.random() * 0.45 + 0.15,
+        a: Math.random() * 0.55 + 0.15, gold: Math.random() < 0.2
+      }));
+
+      (function draw() {
+        ctx.clearRect(0, 0, w, h);
+        for (const p of particles) {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = p.gold ? `rgba(250,204,21,${p.a})` : `rgba(186,230,253,${p.a})`;
+          ctx.fill();
+          p.x += p.vx; p.y += p.vy;
+          if (p.y > h + 10) { p.y = -10; p.x = Math.random() * w; }
+          if (p.x > w + 10) p.x = -10;
+          if (p.x < -10) p.x = w + 10;
+        }
+        requestAnimationFrame(draw);
+      })();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initEvents();
+      initIceParticles();
+      loadMatchesData();
+    });
+  </script>
+</body>
+</html>
