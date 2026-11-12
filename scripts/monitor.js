@@ -1,6 +1,9 @@
 /**
- * Corona Ice Tracker — Motor de monitorizare automată (Eventim.ro + coronabrasov.ro)
- * Playwright + Chromium headless + HTTP/1.1 Fallback. 100% determinist, fără AI.
+ * Corona Ice Tracker — Motor de monitorizare automată
+ * Surse:
+ *   1. Eventim.ro (bilete directe, preț, status)
+ *   2. coronabrasov.ro/hochei-pe-gheata-seniori/ (program oficial meciuri)
+ *   3. coronabrasov.ro (știri și anunțuri punere în vânzare bilete)
  *
  * Utilizare:
  *   node scripts/monitor.js                 # verificare normală
@@ -17,10 +20,11 @@ const DATA_FILE = path.join(__dirname, '..', 'data', 'matches.json');
 const EVENTIM_URL =
   'https://www.eventim.ro/artist/csm-corona-brasov/csm-corona-brasov-hochei-4277387/?affiliate=ROF';
 const CORONA_SITE_URL = 'https://www.coronabrasov.ro';
+const CORONA_HOCKEY_URL = 'https://www.coronabrasov.ro/hochei-pe-gheata-seniori/';
 
 const ACTIVE_HOUR_START = 8; // 08:00 ora României
 const ACTIVE_HOUR_END = 23; // până la 23:00 (exclusiv)
-const HEARTBEAT_MINUTES = 60; // actualizează timestamp-ul o dată pe oră chiar fără meciuri noi
+const HEARTBEAT_MINUTES = 60;
 const KEEP_PAST_MATCH_DAYS = 30;
 const MAX_NEWS = 15;
 
@@ -61,6 +65,17 @@ function slugify(str = '') {
 
 function escapeHtml(str = '') {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function decodeHtmlEntities(str = '') {
+  return String(str)
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&ndash;|&#8211;/gi, '–')
+    .replace(/&mdash;|&#8212;/gi, '—')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#039;|&apos;/gi, "'")
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)));
 }
 
 function bucharestNow() {
@@ -179,7 +194,7 @@ async function sendPushNotification({ title, message, url }) {
 }
 
 // ---------------------------------------------------------------------------
-// Extragere meciuri din JSON-LD / HTML Eventim
+// 1) Scraper Eventim
 // ---------------------------------------------------------------------------
 
 function parseEventimHtml(html, defaultUrl) {
@@ -251,6 +266,7 @@ function parseEventimHtml(html, defaultUrl) {
             status,
             ticketUrl: direct ? url : defaultUrl,
             ticketUrlIsDirect: direct,
+            isHome: true,
             source: 'eventim'
           });
         }
@@ -258,7 +274,6 @@ function parseEventimHtml(html, defaultUrl) {
     } catch (_) {}
   }
 
-  // Scanare link-uri evenimente directe dacă nu s-au extras din JSON-LD
   const eventLinkRegex = /<a\b[^>]*href=["']([^"']*\/event\/csm-corona-brasov[^"']*)["'][^>]*>([\s\S]*?)<\/a>/gi;
   while ((match = eventLinkRegex.exec(html)) !== null) {
     const rawHref = match[1];
@@ -267,7 +282,7 @@ function parseEventimHtml(html, defaultUrl) {
       fullUrl = new URL(rawHref, 'https://www.eventim.ro').href;
     } catch (_) {}
 
-    const innerText = match[2].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    const innerText = decodeHtmlEntities(match[2].replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim();
     if (innerText.length > 5 && !matches.some((m) => m.ticketUrl === fullUrl)) {
       const dateMatch = innerText.match(/\b(\d{1,2})\.(\d{1,2})\.(20\d{2})\b/);
       const timeMatch = innerText.match(/\b([01]?\d|2[0-3]):([0-5]\d)\b/);
@@ -289,6 +304,7 @@ function parseEventimHtml(html, defaultUrl) {
           status: 'Disponibil',
           ticketUrl: fullUrl,
           ticketUrlIsDirect: true,
+          isHome: true,
           source: 'eventim'
         });
       }
@@ -298,130 +314,229 @@ function parseEventimHtml(html, defaultUrl) {
   return matches;
 }
 
-// ---------------------------------------------------------------------------
-// Scraper Eventim cu Playwright (--disable-http2) + Fallback HTTP/1.1 direct
-// ---------------------------------------------------------------------------
-
 async function scrapeEventim(context) {
   console.log(`🔍 Eventim: ${EVENTIM_URL}`);
   let results = [];
+  let lastError = null;
 
-  // Metoda 1: Încercare cu Playwright (Chromium headless fără HTTP/2)
   if (context) {
     let page;
     try {
       page = await context.newPage();
       const response = await page.goto(EVENTIM_URL, {
         waitUntil: 'domcontentloaded',
-        timeout: 30000
+        timeout: 15000
       });
       const httpStatus = response ? response.status() : 0;
       if (httpStatus < 400) {
-        // Acceptare cookies dacă e necesar
         for (const sel of ['#cmpbntyestxt', 'button:has-text("Accept")', 'button:has-text("Sunt de acord")']) {
           const btn = page.locator(sel).first();
-          if (await btn.isVisible({ timeout: 1500 }).catch(() => false)) {
+          if (await btn.isVisible({ timeout: 1200 }).catch(() => false)) {
             await btn.click().catch(() => {});
             break;
           }
         }
-        await page.waitForTimeout(2000);
-        const html = await page.content();
-        results = parseEventimHtml(html, EVENTIM_URL);
+        await page.waitForTimeout(1500);
+        results = parseEventimHtml(await page.content(), EVENTIM_URL);
+      } else {
+        lastError = `HTTP ${httpStatus}`;
       }
     } catch (err) {
-      console.warn(`⚠️ Playwright Eventim întâmpină eroare (${err.message}), activez fallback-ul HTTP/1.1 direct...`);
+      lastError = err.message.split('\n')[0];
+      console.warn(`⚠️ Playwright Eventim (${lastError}), încerc fetch HTTP/1.1...`);
     } finally {
       if (page) await page.close().catch(() => {});
     }
   }
 
-  // Metoda 2 (Fallback robust): Dacă Playwright a fost blocat de HTTP/2, facem fetch direct pe HTTP/1.1
-  if (results.length === 0) {
+  if (results.length === 0 && lastError) {
     try {
-      console.log('🌐 Conectare directă la Eventim prin HTTP/1.1...');
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 10000);
       const res = await fetch(EVENTIM_URL, {
+        signal: controller.signal,
         headers: {
           'User-Agent': USER_AGENT,
-          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-          'Accept-Language': 'ro-RO,ro;q=0.9,en-US;q=0.8,en;q=0.7',
-          'Connection': 'keep-alive'
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+          'Accept-Language': 'ro-RO,ro;q=0.9,en-US;q=0.8,en;q=0.7'
         }
       });
+      clearTimeout(timer);
       if (res.ok) {
-        const html = await res.text();
-        results = parseEventimHtml(html, EVENTIM_URL);
-        console.log(`✅ Fallback HTTP/1.1 a funcționat cu succes (${results.length} meciuri găsite).`);
+        results = parseEventimHtml(await res.text(), EVENTIM_URL);
+        lastError = null;
+        console.log(`✅ Eventim HTTP/1.1: ${results.length} meciuri.`);
       } else {
-        throw new Error(`HTTP ${res.status}`);
+        lastError = `HTTP ${res.status}`;
       }
     } catch (fetchErr) {
-      console.warn(`⚠️ Fallback-ul HTTP/1.1 a raportat: ${fetchErr.message}`);
+      lastError = fetchErr.cause?.code || fetchErr.message;
+      console.warn(`⚠️ Eventim blocat din Cloud (${lastError}).`);
     }
   }
 
-  console.log(`   ↳ Meciuri valide Eventim: ${results.length}`);
-  return { ok: results.length > 0, error: results.length === 0 ? 'Niciun meci activ listat momentan' : null, matches: results };
+  const ok = !lastError;
+  console.log(`   ↳ Eventim ok=${ok}, meciuri=${results.length}`);
+  return { ok, error: lastError, matches: results };
 }
 
 // ---------------------------------------------------------------------------
-// Scraper știri coronabrasov.ro
+// 2) Scraper program oficial de pe coronabrasov.ro/hochei-pe-gheata-seniori/
 // ---------------------------------------------------------------------------
 
-async function scrapeCoronaNews(context) {
-  console.log(`🔍 Știri: ${CORONA_SITE_URL}`);
-  let news = [];
+function parseCoronaScheduleHtml(html) {
+  const matches = [];
+  // Înlocuim tag-urile bloc cu newline pentru a analiza linie cu linie
+  const text = decodeHtmlEntities(
+    html
+      .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+      .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+      .replace(/<\/(p|div|li|tr|h[1-6]|br\s*\/?)>/gi, '\n')
+      .replace(/<td[^>]*>/gi, ' ')
+      .replace(/<[^>]+>/g, ' ')
+  );
 
-  // Încercare fetch direct (rapid și fără riscuri de protocol browser)
+  // Detectăm competiția curentă pe măsură ce parcurgem secțiunile paginii
+  let currentComp = 'Erste Liga';
+  const lines = text.split('\n').map((l) => l.replace(/\s+/g, ' ').trim()).filter(Boolean);
+
+  for (const line of lines) {
+    const norm = normalizeText(line);
+    if (line.length < 40) {
+      if (norm.includes('cupa romaniei')) currentComp = 'Cupa României';
+      else if (norm.includes('campionatul national')) currentComp = 'Campionatul Național';
+      else if (norm.includes('erste liga')) currentComp = 'Erste Liga';
+    }
+
+    // Căutăm linii de tipul: "15.11.2026 ... CSM Corona Brașov – Gyergyói Hoki Klub" (sau invers)
+    const dm = line.match(/\b(\d{1,2})\.(\d{1,2})\.(202\d)\b/);
+    if (!dm || !norm.includes('corona')) continue;
+
+    const date = `${dm[3]}-${String(dm[2]).padStart(2, '0')}-${String(dm[1]).padStart(2, '0')}`;
+    const tm = line.match(/\b([01]?\d|2[0-3]):([0-5]\d)\b/);
+    const time = tm ? `${tm[1].padStart(2, '0')}:${tm[2]}` : null;
+
+    // Extragem cele două echipe separate prin –, —, - sau vs
+    const afterDate = line
+      .replace(dm[0], ' ')
+      .replace(tm ? tm[0] : '', ' ')
+      .replace(/^[\s:.,\-–—]+/, '')
+      .trim();
+
+    const teamSplit = afterDate.split(/\s+(?:–|—|-|vs\.?)\s+/i);
+    if (teamSplit.length < 2) continue;
+
+    const teamA = teamSplit[0].replace(/\s*\d+\s*$/, '').trim();
+    const teamB = teamSplit[1].split(/[|(•]/)[0].replace(/\s*\d+\s*$/, '').trim();
+    if (teamA.length < 3 || teamB.length < 3) continue;
+
+    const isHome = normalizeText(teamA).includes('corona');
+    const opponent = (isHome ? teamB : teamA).trim();
+    const title = isHome ? `CSM Corona Brașov – ${opponent}` : `${opponent} – CSM Corona Brașov`;
+    const id = `corona-${date}-${slugify(opponent)}`;
+
+    if (!matches.some((m) => m.id === id || (m.date === date && normalizeText(m.opponent) === normalizeText(opponent)))) {
+      matches.push({
+        id,
+        title,
+        opponent,
+        competition: detectCompetition(`${currentComp} ${line}`),
+        date,
+        time,
+        location: isHome ? 'Patinoarul Olimpic Brașov' : `Deplasare (${opponent})`,
+        startingPrice: null,
+        status: isHome ? 'Programat' : 'Deplasare',
+        ticketUrl: EVENTIM_URL,
+        ticketUrlIsDirect: false,
+        isHome,
+        source: 'coronabrasov.ro'
+      });
+    }
+  }
+
+  return matches;
+}
+
+// ---------------------------------------------------------------------------
+// 3) Scraper știri + program coronabrasov.ro
+// ---------------------------------------------------------------------------
+
+async function scrapeCoronaSite() {
+  console.log(`🔍 Știri & Program: ${CORONA_SITE_URL}`);
+  let news = [];
+  let scheduleMatches = [];
+  let ok = false;
+  let error = null;
+
   try {
-    const res = await fetch(CORONA_SITE_URL, {
+    const resNews = await fetch(CORONA_SITE_URL, {
       headers: {
         'User-Agent': USER_AGENT,
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         'Accept-Language': 'ro-RO,ro;q=0.9'
       }
     });
-    if (res.ok) {
-      const html = await res.text();
-      const linkRegex = /<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
-      const seen = new Set();
-      let m;
+    if (!resNews.ok) throw new Error(`HTTP ${resNews.status}`);
+    ok = true;
 
-      while ((m = linkRegex.exec(html)) !== null) {
-        const href = m[1];
-        const title = m[2].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-        if (!href || seen.has(href) || href.includes('#') || !/^https?:/.test(href)) continue;
-        if (title.length < 22) continue;
+    const html = await resNews.text();
+    const linkRegex = /<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
+    const seen = new Set();
+    let m;
 
-        let itemHost = '';
-        try {
-          itemHost = new URL(href).hostname.replace(/^www\./, '');
-        } catch (_) {
-          continue;
-        }
-        if (!itemHost.includes('coronabrasov.ro')) continue;
-        seen.add(href);
+    while ((m = linkRegex.exec(html)) !== null) {
+      const href = m[1];
+      const title = decodeHtmlEntities(m[2].replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim();
+      if (!href || seen.has(href) || href.includes('#') || !/^https?:/.test(href)) continue;
+      if (title.length < 22) continue;
 
-        const t = normalizeText(title);
-        const matched = KEYWORDS.filter((kw) => t.includes(normalizeText(kw)));
-        if (!matched.length) continue;
-
-        news.push({
-          id: `news-${slugify(href.replace(/^https?:\/\/[^/]+/, '')) || slugify(title)}`,
-          title,
-          url: href,
-          isTicketAlert: TICKET_ALERT_KEYWORDS.some((k) => t.includes(normalizeText(k))),
-          keywordsMatched: matched,
-          source: 'coronabrasov.ro'
-        });
+      let itemHost = '';
+      try {
+        itemHost = new URL(href).hostname.replace(/^www\./, '');
+      } catch (_) {
+        continue;
       }
+      if (!itemHost.includes('coronabrasov.ro')) continue;
+      seen.add(href);
+
+      const t = normalizeText(title);
+      const matched = KEYWORDS.filter((kw) => t.includes(normalizeText(kw)));
+      if (!matched.length) continue;
+
+      news.push({
+        id: `news-${slugify(href.replace(/^https?:\/\/[^/]+/, '')) || slugify(title)}`,
+        title,
+        url: href,
+        isTicketAlert: TICKET_ALERT_KEYWORDS.some((k) => t.includes(normalizeText(k))),
+        keywordsMatched: matched,
+        source: 'coronabrasov.ro'
+      });
     }
   } catch (err) {
-    console.warn(`⚠️ coronabrasov.ro fetch direct: ${err.message}`);
+    error = err.message;
+    console.warn(`⚠️ coronabrasov.ro știri: ${err.message}`);
   }
 
-  console.log(`   ↳ ${news.length} articole relevante găsite pe coronabrasov.ro.`);
-  return { ok: true, news: news.slice(0, MAX_NEWS) };
+  // Programul oficial de pe pagina de hochei seniori
+  try {
+    const resSched = await fetch(CORONA_HOCKEY_URL, {
+      headers: {
+        'User-Agent': USER_AGENT,
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'ro-RO,ro;q=0.9'
+      }
+    });
+    if (resSched.ok) {
+      const schedHtml = await resSched.text();
+      scheduleMatches = parseCoronaScheduleHtml(schedHtml);
+      console.log(`   ↳ Meciuri extrase din programul oficial coronabrasov.ro: ${scheduleMatches.length}`);
+    }
+  } catch (err) {
+    console.warn(`⚠️ coronabrasov.ro program hochei: ${err.message}`);
+  }
+
+  console.log(`   ↳ Articole relevante găsite pe coronabrasov.ro: ${news.length}`);
+  return { ok, error, news: news.slice(0, MAX_NEWS), scheduleMatches };
 }
 
 // ---------------------------------------------------------------------------
@@ -442,7 +557,9 @@ async function runMonitor() {
 
   const now = bucharestNow();
   const isScheduled = process.env.GITHUB_EVENT_NAME === 'schedule';
-  if (isScheduled && !args.includes('--force') && (now.hour < ACTIVE_HOUR_START || now.hour >= ACTIVE_HOUR_END)) {
+  const isManual = process.env.GITHUB_EVENT_NAME === 'workflow_dispatch' || args.includes('--force');
+
+  if (isScheduled && !isManual && (now.hour < ACTIVE_HOUR_START || now.hour >= ACTIVE_HOUR_END)) {
     console.log(`🌙 Ora ${now.hour}:xx în România — în afara intervalului 08:00–23:00. Nu rulez.`);
     return;
   }
@@ -454,10 +571,9 @@ async function runMonitor() {
   let browser;
   let context;
   let eventim = { ok: false, error: 'neinițializat', matches: [] };
-  let corona = { ok: false, error: 'neinițializat', news: [] };
+  let corona = { ok: false, error: 'neinițializat', news: [], scheduleMatches: [] };
 
   try {
-    // Lansăm Chromium cu flag-urile anti-bot și DEZACTIVARE HTTP/2 (elimină ERR_HTTP2_PROTOCOL_ERROR)
     browser = await chromium.launch({
       headless: true,
       args: [
@@ -479,12 +595,12 @@ async function runMonitor() {
       Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
     });
   } catch (err) {
-    console.warn('⚠️ Chromium nu a putut fi pornit, se va folosi motorul HTTP direct:', err.message);
+    console.warn('⚠️ Chromium nu a pornit, continui cu HTTP direct:', err.message);
   }
 
   try {
     eventim = await scrapeEventim(context);
-    corona = await scrapeCoronaNews(context);
+    corona = await scrapeCoronaSite();
   } finally {
     if (browser) await browser.close().catch(() => {});
   }
@@ -492,15 +608,29 @@ async function runMonitor() {
   let changed = false;
   const notifications = [];
 
-  // ---- Meciuri ----
-  let matches = (existing.matches || []).filter((m) => m.source === 'eventim');
+  // ---- Combinăm meciurile reale din ambele surse (prioritate Eventim) ----
+  const incomingMatches = [...eventim.matches];
+  for (const cm of corona.scheduleMatches) {
+    const dup = incomingMatches.some(
+      (em) => em.date === cm.date && normalizeText(em.opponent) === normalizeText(cm.opponent)
+    );
+    if (!dup) incomingMatches.push(cm);
+  }
+
+  let matches = (existing.matches || []).filter(
+    (m) => m.source === 'eventim' || m.source === 'coronabrasov.ro'
+  );
   if (matches.length !== (existing.matches || []).length) changed = true;
 
   const newlyFound = [];
-  for (const fresh of eventim.matches) {
+  for (const fresh of incomingMatches) {
     const old = matches.find(
-      (m) => m.id === fresh.id || (fresh.ticketUrlIsDirect && m.ticketUrl === fresh.ticketUrl)
+      (m) =>
+        m.id === fresh.id ||
+        (fresh.ticketUrlIsDirect && m.ticketUrl === fresh.ticketUrl) ||
+        (m.date === fresh.date && normalizeText(m.opponent) === normalizeText(fresh.opponent))
     );
+
     if (!old) {
       matches.push({ ...fresh, firstSeen: nowIso, stillListed: true });
       newlyFound.push(fresh);
@@ -509,15 +639,14 @@ async function runMonitor() {
     }
 
     const becameAvailable = old.status !== 'Disponibil' && fresh.status === 'Disponibil';
-    for (const key of ['title', 'opponent', 'time', 'startingPrice', 'status', 'ticketUrl', 'ticketUrlIsDirect', 'location']) {
-      if (fresh[key] != null && fresh[key] !== old[key]) {
-        old[key] = fresh[key];
-        changed = true;
+    // Dacă apare acum pe Eventim, actualizăm sursa și link-ul direct
+    if (fresh.source === 'eventim' || old.source === fresh.source) {
+      for (const key of ['title', 'opponent', 'time', 'startingPrice', 'status', 'ticketUrl', 'ticketUrlIsDirect', 'location', 'source', 'isHome']) {
+        if (fresh[key] != null && fresh[key] !== old[key]) {
+          old[key] = fresh[key];
+          changed = true;
+        }
       }
-    }
-    if (old.stillListed === false) {
-      old.stillListed = true;
-      changed = true;
     }
     if (becameAvailable && !isFirstRun) {
       notifications.push({
@@ -528,38 +657,22 @@ async function runMonitor() {
     }
   }
 
-  // Meciuri care nu mai apar pe Eventim
-  if (eventim.ok && eventim.matches.length > 0) {
-    for (const m of matches) {
-      const listed = eventim.matches.some((f) => f.id === m.id || f.ticketUrl === m.ticketUrl);
-      if (!listed && m.date >= now.date && m.stillListed !== false) {
-        m.stillListed = false;
-        changed = true;
-      }
-    }
-  }
-
-  // Curățăm meciurile mai vechi de KEEP_PAST_MATCH_DAYS
+  // Curățăm meciurile mai vechi de KEEP_PAST_MATCH_DAYS și sortăm cronologic
   const before = matches.length;
   matches = matches.filter((m) => daysBetween(now.date, m.date) <= KEEP_PAST_MATCH_DAYS);
   if (matches.length !== before) changed = true;
   matches.sort((a, b) => `${a.date} ${a.time || ''}`.localeCompare(`${b.date} ${b.time || ''}`));
 
   if (newlyFound.length) {
-    if (isFirstRun || newlyFound.length > 3) {
+    const eventimNew = newlyFound.filter((m) => m.source === 'eventim');
+    if (eventimNew.length) {
       notifications.push({
-        title: `${newlyFound.length} meciuri Corona pe Eventim`,
-        message: newlyFound.map((m) => `• ${m.date} — ${m.opponent || m.title} (${m.status})`).join('\n'),
-        url: EVENTIM_URL
+        title: eventimNew.length === 1
+          ? `Bilete Eventim: ${eventimNew[0].opponent || eventimNew[0].title}`
+          : `${eventimNew.length} meciuri Corona pe Eventim`,
+        message: eventimNew.map((m) => `• ${m.date} — ${m.opponent || m.title} (${m.status})`).join('\n'),
+        url: eventimNew.length === 1 ? eventimNew[0].ticketUrl : EVENTIM_URL
       });
-    } else {
-      for (const m of newlyFound) {
-        notifications.push({
-          title: `Meci nou pe Eventim: ${m.opponent || m.title}`,
-          message: `${m.title}\n📅 ${m.date}${m.time ? ' ora ' + m.time : ''}\n📍 ${m.location}\n💰 ${m.startingPrice || 'preț pe Eventim'}\n🎟️ ${m.status}`,
-          url: m.ticketUrl
-        });
-      }
     }
   }
 
@@ -583,13 +696,20 @@ async function runMonitor() {
     ? (Date.now() - new Date(existing.lastChecked).getTime()) / 60000
     : Infinity;
   const heartbeatDue = minutesSinceCheck >= HEARTBEAT_MINUTES;
+  const statusChanged = existing.sources?.eventim?.error !== eventim.error || existing.sources?.coronabrasov?.ok !== corona.ok;
 
-  if (changed || heartbeatDue || isFirstRun) {
+  if (changed || heartbeatDue || isFirstRun || isManual || statusChanged) {
     const payload = {
       lastChecked: nowIso,
       sources: {
         eventim: { url: EVENTIM_URL, ok: eventim.ok, found: eventim.matches.length, error: eventim.error || null },
-        coronabrasov: { url: CORONA_SITE_URL, ok: corona.ok, found: corona.news.length, error: null }
+        coronabrasov: {
+          url: CORONA_SITE_URL,
+          ok: corona.ok,
+          found: corona.news.length,
+          scheduleFound: corona.scheduleMatches.length,
+          error: corona.error || null
+        }
       },
       matches,
       news

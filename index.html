@@ -1482,6 +1482,8 @@
       if (m.stillListed === false) return '⚠️ Nu mai apare pe Eventim';
       if (m.status === 'Disponibil') return '● Bilete Disponibile';
       if (m.status === 'Epuizat') return '✕ Epuizat';
+      if (m.status === 'Programat') return '📅 Programat Acasă';
+      if (m.status === 'Deplasare') return '🚌 Meci în Deplasare';
       if (m.status === 'În curând') return '⏳ Bilete În Curând';
       return '? Status necunoscut';
     }
@@ -1490,6 +1492,9 @@
     function verifyBadge(m) {
       if (m.stillListed === false) {
         return `<span class="verify-badge gone">⚠️ Nu mai este listat pe Eventim — verifică manual</span>`;
+      }
+      if (m.source === 'coronabrasov.ro') {
+        return `<span class="verify-badge ok">✔ Program oficial coronabrasov.ro</span>`;
       }
       if (m.ticketUrlIsDirect) {
         return `<span class="verify-badge ok">✔ Găsit pe Eventim • link direct către eveniment</span>`;
@@ -1590,9 +1595,13 @@
         html = `<strong>Botul nu a rulat încă.</strong> Lista se va umple automat după prima rulare din GitHub Actions
                 (vezi <em>📲 Alerte iPhone &amp; Setup</em>). Nu sunt afișate meciuri inventate.`;
       } else if (d.sources?.eventim && d.sources.eventim.ok === false) {
-        cls = 'error';
-        html = `<strong>Ultima verificare Eventim a eșuat</strong> (${esc(d.sources.eventim.error || 'eroare necunoscută')}).
-                Datele de mai jos pot fi învechite — confirmă pe <a href="${EVENTIM_ARTIST_URL}" target="_blank" rel="noopener">Eventim</a>.`;
+        cls = d.sources?.coronabrasov?.ok ? 'warn' : 'error';
+        html = d.sources?.coronabrasov?.ok
+          ? `<strong>Eventim blochează conexiunile din Cloud (GitHub Actions).</strong>
+             Programul oficial și alertele de știri sunt actualizate de pe <strong>coronabrasov.ro</strong>.
+             Pentru cumpărare, accesează direct <a href="${EVENTIM_ARTIST_URL}" target="_blank" rel="noopener">Eventim</a>.`
+          : `<strong>Ultima verificare Eventim a eșuat</strong> (${esc(d.sources.eventim.error || 'eroare necunoscută')}).
+             Confirmă direct pe <a href="${EVENTIM_ARTIST_URL}" target="_blank" rel="noopener">Eventim</a>.`;
       } else if (Date.now() - new Date(d.lastChecked).getTime() > 3 * 3600 * 1000) {
         html = `<strong>Datele sunt mai vechi de 3 ore</strong> (ultima verificare: ${esc(formatDateTime(d.lastChecked))}).
                 Posibil ca botul să fie oprit noaptea (23:00–08:00) sau workflow-ul să fi eșuat.`;
@@ -1866,8 +1875,10 @@
         appState.data = {
           lastChecked: json.lastChecked || null,
           sources: json.sources || {},
-          // Afișăm doar meciuri provenite de pe Eventim, cu dată validă
-          matches: (json.matches || []).filter((m) => m && m.source === 'eventim' && /^\d{4}-\d{2}-\d{2}$/.test(m.date)),
+          // Afișăm meciuri provenite de pe Eventim sau din programul oficial coronabrasov.ro
+          matches: (json.matches || []).filter(
+            (m) => m && (m.source === 'eventim' || m.source === 'coronabrasov.ro') && /^\d{4}-\d{2}-\d{2}$/.test(m.date)
+          ),
           news: (json.news || []).filter((n) => n && n.source === 'coronabrasov.ro')
         };
       } catch (err) {
