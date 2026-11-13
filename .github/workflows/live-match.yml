@@ -49,17 +49,48 @@ jobs:
             node scripts/monitor.js --watch-tick || true
             git add data/matches.json
             if ! git diff --staged --quiet; then
-              git commit -m "Live update ($(date +'%H:%M:%S'))"
-              git pull --rebase --autostash || true
-              git push || true
+              for attempt in 1 2 3; do
+                git fetch origin main || break
+                if ! git merge-base --is-ancestor origin/main HEAD; then
+                  echo "origin/main a avansat concurent — resincronizez snapshot-ul live..."
+                  git reset --hard origin/main
+                  node scripts/monitor.js --watch-tick --no-notify || true
+                  git add data/matches.json
+                  if git diff --staged --quiet; then
+                    break
+                  fi
+                fi
+                if git diff --staged --quiet; then
+                  break
+                fi
+                git commit -m "Live update ($(date +'%H:%M:%S'))" || true
+                if git push origin HEAD:main; then
+                  break
+                fi
+                sleep 2
+              done
             fi
             STATUS=$(node -e '
               const fs = require("fs");
               const d = JSON.parse(fs.readFileSync("data/matches.json", "utf8"));
-              const today = new Date().toLocaleDateString("en-CA", { timeZone: "Europe/Bucharest" });
-              if (d.activeMatch) console.log("LIVE");
-              else if ((d.matches || []).some(m => m.date === today && m.matchState === "scheduled")) console.log("TODAY");
-              else console.log("NONE");
+              if (d.activeMatch) { console.log("LIVE"); process.exit(0); }
+              const parts = new Intl.DateTimeFormat("en-CA", {
+                timeZone: "Europe/Bucharest",
+                year: "numeric", month: "2-digit", day: "2-digit",
+                hour: "2-digit", minute: "2-digit", hourCycle: "h23"
+              }).formatToParts(new Date());
+              const map = Object.fromEntries(parts.map(p => [p.type, p.value]));
+              const today = `${map.year}-${map.month}-${map.day}`;
+              const nowMin = Number(map.hour) * 60 + Number(map.minute);
+              const nearStart = (d.matches || []).some(m => {
+                if (m.date !== today || m.matchState !== "scheduled") return false;
+                if (!m.time) return true;
+                const [hh, mm] = m.time.split(":").map(Number);
+                if (Number.isNaN(hh) || Number.isNaN(mm)) return true;
+                const diff = nowMin - (hh * 60 + mm);
+                return diff >= -45 && diff <= 60;
+              });
+              console.log(nearStart ? "TODAY" : "NONE");
             ')
             echo "Status curent: $STATUS"
             if [ "$STATUS" = "LIVE" ]; then
@@ -68,7 +99,7 @@ jobs:
               echo "Meciul activ s-a încheiat. Opresc watch-ul."
               break
             elif [ "$STATUS" = "NONE" ]; then
-              echo "Niciun meci activ sau programat azi. Opresc watch-ul."
+              echo "Niciun meci activ sau în fereastra de start acum. Opresc watch-ul."
               break
             fi
             sleep 30

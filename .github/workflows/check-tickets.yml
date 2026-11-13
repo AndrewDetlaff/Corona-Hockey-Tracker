@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: corona-ticket-monitor
@@ -37,16 +38,81 @@ jobs:
           TZ: "Europe/Bucharest"
         run: node scripts/monitor.js
 
-      - name: Commit & push data/matches.json (dacă s-a modificat)
+      - name: Commit & push data/matches.json (fără conflicte)
         if: always()
+        env:
+          TZ: "Europe/Bucharest"
         run: |
           git config user.name "Corona Ice Tracker Bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/matches.json
           if git diff --staged --quiet; then
             echo "Nicio modificare de salvat."
-          else
+            exit 0
+          fi
+
+          for attempt in 1 2 3; do
+            git fetch origin main
+            if ! git merge-base --is-ancestor origin/main HEAD; then
+              echo "origin/main a avansat concurent — resincronizez snapshot-ul (încercarea $attempt)..."
+              git reset --hard origin/main
+              node scripts/monitor.js --force --no-notify
+              git add data/matches.json
+              if git diff --staged --quiet; then
+                echo "Datele sunt deja la zi pe origin/main."
+                exit 0
+              fi
+            fi
+
             git commit -m "Actualizare automată meciuri & știri ($(date +'%Y-%m-%d %H:%M'))"
-            git pull --rebase --autostash
-            git push
+            if git push origin HEAD:main; then
+              echo "Push reușit!"
+              exit 0
+            fi
+            echo "Push blocat de un commit concurent; reîncerc..."
+            sleep 2
+          done
+
+          echo "Eroare: nu s-a putut face push după 3 încercări."
+          exit 1
+
+      - name: Auto-pornire Live Match Watcher (înainte / în timpul meciului)
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TZ: "Europe/Bucharest"
+        run: |
+          SHOULD_WATCH=$(node -e '
+            const fs = require("fs");
+            const d = JSON.parse(fs.readFileSync("data/matches.json", "utf8"));
+            if (d.activeMatch) { console.log("1"); process.exit(0); }
+            const parts = new Intl.DateTimeFormat("en-CA", {
+              timeZone: "Europe/Bucharest",
+              year: "numeric", month: "2-digit", day: "2-digit",
+              hour: "2-digit", minute: "2-digit", hourCycle: "h23"
+            }).formatToParts(new Date());
+            const map = Object.fromEntries(parts.map(p => [p.type, p.value]));
+            const today = `${map.year}-${map.month}-${map.day}`;
+            const nowMin = Number(map.hour) * 60 + Number(map.minute);
+            const near = (d.matches || []).some(m => {
+              if (m.date !== today || m.matchState !== "scheduled" || !m.time) return false;
+              const [hh, mm] = m.time.split(":").map(Number);
+              if (Number.isNaN(hh) || Number.isNaN(mm)) return false;
+              const diff = nowMin - (hh * 60 + mm);
+              return diff >= -20 && diff <= 35;
+            });
+            console.log(near ? "1" : "0");
+          ')
+
+          if [ "$SHOULD_WATCH" = "1" ]; then
+            ACTIVE=$(gh run list --workflow=live-match.yml --status=in_progress --json databaseId --jq 'length' || echo "0")
+            QUEUED=$(gh run list --workflow=live-match.yml --status=queued --json databaseId --jq 'length' || echo "0")
+            if [ "$ACTIVE" = "0" ] && [ "$QUEUED" = "0" ]; then
+              echo "🔴 Meci detectat aproape de start sau LIVE — pornesc automat live-match.yml!"
+              gh workflow run live-match.yml -f max_minutes=200
+            else
+              echo "Live Match Watcher rulează deja (active=$ACTIVE, queued=$QUEUED)."
+            fi
+          else
+            echo "Niciun meci LIVE sau în prag de start acum."
           fi

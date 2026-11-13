@@ -156,6 +156,19 @@ async function fetchWithTimeout(url, options = {}, timeoutMs = 15000) {
   }
 }
 
+async function mapWithConcurrency(items, limit, fn) {
+  const results = new Array(items.length);
+  let idx = 0;
+  async function worker() {
+    while (idx < items.length) {
+      const i = idx++;
+      results[i] = await fn(items[i], i);
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+  return results;
+}
+
 function loadExistingData() {
   try {
     if (fs.existsSync(DATA_FILE)) {
@@ -418,7 +431,7 @@ async function scrapeErsteLiga(existingMatchesMap) {
       ...sortedFinished.map((g) => g.id)
     ]);
 
-    for (const g of coronaGames) {
+    result.matches = await mapWithConcurrency(coronaGames, 5, async (g) => {
       const id = `el-${g.id}`;
       const localDate = bucharestParts(new Date(g.gameDate));
       const homeName = g.homeTeam?.longName || 'Gazde';
@@ -484,7 +497,7 @@ async function scrapeErsteLiga(existingMatchesMap) {
         }
       }
 
-      result.matches.push({
+      return {
         id,
         gameNo: g.gameName || null,
         title: `${homeName} – ${awayName}`,
@@ -516,8 +529,8 @@ async function scrapeErsteLiga(existingMatchesMap) {
         ticketUrl: EVENTIM_URL,
         ticketUrlIsDirect: false,
         source: 'ersteliga.hu'
-      });
-    }
+      };
+    });
     console.log(`   ↳ Erste Liga: ${result.matches.length} meciuri Corona (${result.live ? 'LIVE ACTIV!' : 'niciunul live'}).`);
   } catch (err) {
     result.error = err.message;
@@ -822,7 +835,7 @@ async function scrapeIceHockeyRo(existingMatchesMap) {
       ...pastSorted.map((m) => m.gameUrl)
     ]);
 
-    for (const m of allParsed) {
+    result.matches = await mapWithConcurrency(allParsed, 5, async (m) => {
       const gameIdMatch = m.gameUrl?.match(/\/game\/(\d+)\//);
       const id = gameIdMatch ? `frhg-${gameIdMatch[1]}` : `frhg-${m.date}-${slugify(m.homeTeam)}-${slugify(m.awayTeam)}`;
       const isHome = isCoronaName(m.homeTeam);
@@ -882,7 +895,7 @@ async function scrapeIceHockeyRo(existingMatchesMap) {
         }
       }
 
-      result.matches.push({
+      return {
         id,
         gameNo: m.gameNo || null,
         title: `${m.homeTeam} – ${m.awayTeam}`,
@@ -910,8 +923,8 @@ async function scrapeIceHockeyRo(existingMatchesMap) {
         ticketUrl: EVENTIM_URL,
         ticketUrlIsDirect: false,
         source: 'icehockey.ro'
-      });
-    }
+      };
+    });
     result.found = result.matches.length;
     console.log(`   ↳ FRHG (icehockey.ro): ${result.matches.length} meciuri CN + Cupă.`);
   } catch (err) {
@@ -1078,7 +1091,9 @@ function teamMatchKey(name = '') {
   if (n.includes('csikszereda') || n.includes('miercurea ciuc')) return 'csikszereda';
   if (n.includes('gyergyoi') || n.includes('gheorgheni')) return 'gheorgheni';
   if (n.includes('haromszeki') || n.includes('fenestela')) return 'fenestela';
-  if (n.includes('budapest') || n.includes('bja')) return 'bja';
+  if (n.includes('ftc') || n.includes('ferencvaros')) return 'ftc';
+  if (n.includes('ute') || n.includes('ujpest')) return 'ute';
+  if (n.includes('bja') || n.includes('jegkorong akademia')) return 'bja';
   if (n.includes('dunaujvaros') || n.includes('dab')) return 'dab';
   if (n.includes('dvtk')) return 'dvtk';
   if (n.includes('feha')) return 'feha19';
@@ -1146,9 +1161,9 @@ function collectMatchNotifications(matches, liveState) {
     const prevPhase = phaseStates[m.id] || null;
     const currentPhase = `${m.matchState}${scoreStr ? `:${scoreStr}` : ''}`;
 
+    const prevState = prevPhase ? prevPhase.split(':')[0] : null;
     // 1. Notificări pentru tranziții de fază (Start meci, Final meci)
-    if (isSeeded && prevPhase !== currentPhase) {
-      const prevState = prevPhase ? prevPhase.split(':')[0] : 'scheduled';
+    if (isSeeded && prevPhase && prevPhase !== currentPhase) {
       if (m.matchState === 'live' && prevState === 'scheduled') {
         notifications.push({
           title: `A INCEPUT MECIUL! ${m.homeTeam} vs ${m.awayTeam}`,
@@ -1186,8 +1201,9 @@ function collectMatchNotifications(matches, liveState) {
       if (seenSet.has(ev.id)) continue;
       seenSet.add(ev.id);
 
-      // La prima rulare (seed) sau pentru meciuri vechi deja încheiate de zile întregi, nu trimitem notificări
-      if (!isSeeded || (m.matchState !== 'live' && prevPhase === currentPhase)) continue;
+      // Nu trimitem notificări pentru meciuri vechi sau la prima populare (seed)
+      const justFinishedFromLive = m.matchState === 'finished' && prevState === 'live';
+      if (!isSeeded || (m.matchState !== 'live' && !justFinishedFromLive)) continue;
 
       if (ev.type === 'goal') {
         const coronaScored = ev.isCorona;
@@ -1248,7 +1264,7 @@ function collectMatchNotifications(matches, liveState) {
 // Ciclul unic de verificare
 // ---------------------------------------------------------------------------
 
-async function runSingleCheck({ isManual = false, isWatchTick = false } = {}) {
+async function runSingleCheck({ isManual = false, isWatchTick = false, noNotify = false } = {}) {
   const now = bucharestParts();
   const existing = loadExistingData();
   const isFirstRun = !existing.lastChecked;
@@ -1256,8 +1272,17 @@ async function runSingleCheck({ isManual = false, isWatchTick = false } = {}) {
 
   const existingMatchesMap = new Map((existing.matches || []).map((m) => [m.id, m]));
 
+  const coronaPromise = isWatchTick
+    ? Promise.resolve({
+        ok: existing.sources?.coronabrasov?.ok ?? true,
+        error: existing.sources?.coronabrasov?.error || null,
+        news: [],
+        scheduleMatches: []
+      })
+    : scrapeCoronaSite();
+
   const [corona, erste, frhg] = await Promise.all([
-    scrapeCoronaSite(),
+    coronaPromise,
     scrapeErsteLiga(existingMatchesMap),
     scrapeIceHockeyRo(existingMatchesMap)
   ]);
@@ -1360,7 +1385,7 @@ async function runSingleCheck({ isManual = false, isWatchTick = false } = {}) {
       news
     };
     fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
-    fs.writeFileSync(DATA_FILE, JSON.stringify(payload, null, 2) + '\n', 'utf8');
+    fs.writeFileSync(DATA_FILE, JSON.stringify(payload), 'utf8');
     console.log(
       `💾 data/matches.json salvat (${matches.length} meciuri, ${news.length} știri${activeMatch ? `, LIVE: ${activeMatch.title}` : ''}).`
     );
@@ -1368,8 +1393,12 @@ async function runSingleCheck({ isManual = false, isWatchTick = false } = {}) {
     console.log('✅ Nicio modificare nouă.');
   }
 
-  for (const n of notifications) {
-    await sendPushNotification(n);
+  if (!noNotify) {
+    for (const n of notifications) {
+      await sendPushNotification(n);
+    }
+  } else if (notifications.length) {
+    console.log(`🔕 --no-notify activ: ${notifications.length} notificări sărite la re-sincronizare.`);
   }
 
   if (!corona.ok && !erste.ok && !frhg.ok) {
@@ -1406,6 +1435,7 @@ async function runMonitor() {
   const isScheduled = process.env.GITHUB_EVENT_NAME === 'schedule';
   const isWatch = args.includes('--watch');
   const isWatchTick = args.includes('--watch-tick');
+  const noNotify = args.includes('--no-notify');
   const isManual = (process.env.GITHUB_EVENT_NAME === 'workflow_dispatch' || args.includes('--force')) && !isWatchTick;
 
   if (isScheduled && !isManual && !isWatch && !isWatchTick && (now.hour < ACTIVE_HOUR_START || now.hour >= ACTIVE_HOUR_END)) {
@@ -1414,7 +1444,7 @@ async function runMonitor() {
   }
 
   if (!isWatch) {
-    await runSingleCheck({ isManual, isWatchTick });
+    await runSingleCheck({ isManual, isWatchTick, noNotify });
     return;
   }
 

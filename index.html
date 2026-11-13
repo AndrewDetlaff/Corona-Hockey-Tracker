@@ -216,6 +216,33 @@
       transform: translateY(-1px);
     }
 
+    .btn-refresh {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: rgba(14, 165, 233, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: #7dd3fc;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-refresh:hover {
+      background: rgba(14, 165, 233, 0.22);
+    }
+
+    .btn-refresh.spinning svg {
+      animation: spinRefresh 0.75s linear infinite;
+    }
+
+    @keyframes spinRefresh {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
     /* HERO CARD — Următorul Meci */
     .hero-card {
       position: relative;
@@ -1952,6 +1979,12 @@
           <span class="pulse-dot"></span>
           <span id="last-checked-text">Verificat recent</span>
         </button>
+        <button type="button" class="btn-refresh" id="btn-refresh-now" title="Actualizează datele acum" aria-label="Actualizează datele acum">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12a9 9 0 1 1-2.64-6.36" />
+            <polyline points="21 3 21 9 15 9" />
+          </svg>
+        </button>
         <button type="button" class="btn-config" id="btn-open-guide">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
@@ -2207,10 +2240,12 @@
     ];
     const MONTHS_SHORT_RO = ['Ian', 'Feb', 'Mar', 'Apr', 'Mai', 'Iun', 'Iul', 'Aug', 'Sep', 'Oct', 'Noi', 'Dec'];
 
+    const CACHE_KEY = 'corona_ice_cache_v1';
     const today = new Date();
     const appState = {
       data: { lastChecked: null, sources: {}, activeMatch: null, matches: [], news: [] },
       loadError: null,
+      usingCache: false,
       activeCompetition: 'Toate',
       resultsCompetition: 'Toate',
       showAllResults: false,
@@ -2599,7 +2634,11 @@
       let html = '';
       let cls = 'warn';
 
-      if (appState.loadError) {
+      if (appState.loadError && appState.usingCache) {
+        cls = 'warn';
+        html = `<strong>Mod offline / conexiune slabă</strong> (${esc(appState.loadError)}).
+                Afișăm ultimele date salvate local (${esc(formatDateTime(d.lastChecked))}).`;
+      } else if (appState.loadError) {
         cls = 'error';
         html = location.protocol === 'file:'
           ? `<strong>Pagina e deschisă direct din fișier</strong>, așa că browserul nu poate citi <code>data/matches.json</code>.
@@ -3246,7 +3285,20 @@
     }
 
     // ------------------------------------------------------------------ încărcare
-    async function loadMatchesData({ isRefresh = false } = {}) {
+    function readCachedData() {
+      try {
+        const raw = localStorage.getItem(CACHE_KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (parsed && (parsed.lastChecked || (parsed.matches && parsed.matches.length))) return parsed;
+      } catch (_) {}
+      return null;
+    }
+
+    async function loadMatchesData({ isRefresh = false, manual = false } = {}) {
+      const refreshBtn = document.getElementById('btn-refresh-now');
+      if (manual && refreshBtn) refreshBtn.classList.add('spinning');
+
       try {
         const res = await fetch(`./data/matches.json?t=${Date.now()}`, { cache: 'no-store' });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -3262,8 +3314,26 @@
           news: (json.news || []).filter((n) => n && n.source === 'coronabrasov.ro')
         };
         appState.loadError = null;
+        appState.usingCache = false;
+        try { localStorage.setItem(CACHE_KEY, JSON.stringify(appState.data)); } catch (_) {}
+        if (manual) showLiveToast('🔄 Date sincronizate', 'Meciurile și știrile au fost actualizate.');
       } catch (err) {
         appState.loadError = err.message || 'eroare de rețea';
+        const hasLoadedData = Boolean(appState.data.lastChecked || (appState.data.matches || []).length);
+        if (hasLoadedData) {
+          appState.usingCache = true;
+        } else {
+          const cached = readCachedData();
+          if (cached) {
+            appState.data = cached;
+            appState.usingCache = true;
+          }
+        }
+        if (manual) {
+          showLiveToast('⚠️ Nu s-a putut reîmprospăta', appState.usingCache ? 'Afișăm ultimele date salvate.' : appState.loadError);
+        }
+      } finally {
+        if (refreshBtn) refreshBtn.classList.remove('spinning');
       }
 
       checkLiveTransitions(appState.data.activeMatch);
@@ -3381,6 +3451,10 @@
       ['btn-open-guide', 'btn-status-pill', 'dock-open-guide'].forEach((id) =>
         document.getElementById(id).addEventListener('click', openModal)
       );
+      const refreshNowBtn = document.getElementById('btn-refresh-now');
+      if (refreshNowBtn) {
+        refreshNowBtn.addEventListener('click', () => loadMatchesData({ isRefresh: true, manual: true }));
+      }
       document.getElementById('btn-close-modal').addEventListener('click', closeModal);
       document.getElementById('btn-close-summary-modal').addEventListener('click', closeSummary);
       modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
