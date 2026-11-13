@@ -1,16 +1,23 @@
 # 🏒 Corona Ice Tracker
 
-Bot gratuit care verifică automat anunțurile despre bilete și programul oficial al meciurilor de hochei **CSM Corona Brașov** de pe [coronabrasov.ro](https://www.coronabrasov.ro). Te anunță imediat pe telefon (ntfy.sh sau Telegram) cu link direct către [Eventim](https://www.eventim.ro/artist/csm-corona-brasov/csm-corona-brasov-hochei-4277387/?affiliate=ROF) și include o interfață web (PWA) optimizată pentru mobil (iOS & Android) și desktop.
+Bot gratuit care monitorizează automat meciurile de hochei **CSM Corona Brașov** (Erste Liga, Campionatul Național, Cupa României), oferă **rezumate ale meciurilor trecute și scor live în timp real**, și te anunță imediat pe telefon (ntfy.sh sau Telegram) când se marchează un **gol**, se întâmplă un eveniment important sau apar **bilete noi** pe [Eventim](https://www.eventim.ro/artist/csm-corona-brasov/csm-corona-brasov-hochei-4277387/?affiliate=ROF).
 
-- **Fără AI, fără costuri, fără dependențe grele:** rulează gratuit pe GitHub Actions în câteva secunde folosind Node.js 20.
-- **Fără date inventate:** interfața afișează **doar** meciurile și știrile găsite pe site-ul oficial al clubului.
+- **Fără AI, fără costuri, fără dependențe grele:** rulează gratuit pe GitHub Actions folosind Node.js 20.
+- **Fără date inventate:** interfața afișează **doar** date reale preluate din sursele oficiale (`coronabrasov.ro`, `ersteliga.hu` / `api.icehockey.hu`, `icehockey.ro`).
 
 ## Cum funcționează
 
 1. La fiecare 10 minute (08:00–23:00 ora României), GitHub Actions rulează `scripts/monitor.js`.
-2. Scriptul citește pagina oficială `coronabrasov.ro` și programul echipei de hochei seniori (`coronabrasov.ro/hochei-pe-gheata-seniori/`).
-3. Rezultatul e comparat cu `data/matches.json`. Când apare un **anunț nou despre bilete** („bilete”, „punem în vânzare”, „abonamente”, „eventim”), botul trimite o notificare cu **prioritate maximă (`urgent`)** și buton direct către pagina Eventim.
-4. Fișierul actualizat e salvat automat în repository, iar `index.html` (pe GitHub Pages) îl afișează.
+2. Scriptul verifică:
+   - `coronabrasov.ro` & `coronabrasov.ro/hochei-seniori/` (anunțuri bilete & program oficial)
+   - **Erste Liga** (`api.icehockey.hu/vbr/v2/`) — program, scor live, reprize, șuturi pe poartă, eliminări și cronologia golurilor
+   - **FRHG** (`icehockey.ro`) — Campionatul Național & Cupa României (scoruri, rezumate și evenimente)
+3. Rezultatul e comparat cu `data/matches.json`. Botul trimite notificări push pentru:
+   - 🚨 **Goluri marcate** (marcator, pase decisive, minut, repriză, scor actualizat, PP/SH/EN)
+   - 🏒 **Evenimente importante** (start meci, final de repriză, OT/SO, eliminări majore 5+ min, portar scos, scor final + sumar)
+   - 🎟️ **Anunțuri noi de bilete** („bilete”, „punem în vânzare”, „abonamente”, „eventim”)
+4. Pentru urmărire **live la ~30 secunde** în timpul unui meci, poți porni din GitHub tab-ul **Actions → Corona Ice Tracker - Live Match Watcher → Run workflow** (sau local `npm run watch`).
+5. Fișierul `data/matches.json` este salvat automat în repository, iar `index.html` (pe GitHub Pages) afișează Live Match Center, Rezultate & Sumare, Calendarul și Radarul de Știri.
 
 ## Pornire rapidă
 
@@ -56,6 +63,7 @@ Necesită [Node.js 18+](https://nodejs.org).
 
 ```bash
 node scripts/monitor.js --force          # verificare completă (ignoră intervalul orar)
+node scripts/monitor.js --watch          # urmărire live continuă (goluri la 25s)
 node scripts/monitor.js --test-notify    # doar notificare de test
 npx serve .                              # interfața la http://localhost:3000
 ```
@@ -69,10 +77,11 @@ $env:NTFY_TOPIC = "corona-bv-x7k29"; node scripts/monitor.js --test-notify
 
 ```
 ├── .github/workflows/check-tickets.yml   # rulare automată la 10 minute
-├── data/matches.json                     # meciuri + știri (scris de bot)
+├── .github/workflows/live-match.yml      # urmărire live la 30s (manual în timpul meciului)
+├── data/matches.json                     # meciuri + scoruri + rezumate + știri
 ├── scripts/monitor.js                    # monitorizare + comparare + notificări
 ├── icons/                                # pictograme PWA (iOS & Android)
-├── index.html                            # interfața web
+├── index.html                            # interfața web (Live, Rezultate, Calendar, Știri)
 ├── manifest.json                         # manifest PWA
 └── package.json
 ```

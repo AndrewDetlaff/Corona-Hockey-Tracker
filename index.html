@@ -1155,6 +1155,426 @@
       margin-bottom: 18px;
     }
 
+    /* ================================================================
+       LIVE MATCH CENTER & REZULTATE / SUMAR MECIURI
+       ================================================================ */
+    .live-card {
+      position: relative;
+      overflow: hidden;
+      padding: 24px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(239, 68, 68, 0.6);
+      background:
+        radial-gradient(circle at 88% 12%, rgba(239, 68, 68, 0.22) 0%, transparent 46%),
+        radial-gradient(circle at 12% 88%, rgba(250, 204, 21, 0.14) 0%, transparent 50%),
+        linear-gradient(135deg, rgba(20, 12, 28, 0.92) 0%, rgba(7, 20, 42, 0.94) 100%);
+      box-shadow: 0 18px 42px -12px rgba(239, 68, 68, 0.35);
+    }
+
+    .badge-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(239, 68, 68, 0.22);
+      border: 1px solid rgba(239, 68, 68, 0.65);
+      color: #fca5a5;
+      font-weight: 800;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      padding: 5px 12px;
+      border-radius: 999px;
+    }
+
+    .pulse-red {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ef4444;
+      animation: pulseRed 1.5s infinite;
+    }
+
+    @keyframes pulseRed {
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.8); }
+      70% { box-shadow: 0 0 0 9px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    .scoreboard-box {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 14px;
+      margin: 14px 0 16px;
+      padding: 18px 14px;
+      border-radius: 18px;
+      background: rgba(4, 14, 29, 0.62);
+      border: 1px solid rgba(148, 210, 255, 0.15);
+    }
+
+    .score-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .score-big {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 2.75rem;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: 2px;
+      color: #ffffff;
+      text-shadow: 0 0 22px rgba(250, 204, 21, 0.25);
+      white-space: nowrap;
+    }
+
+    .score-big .sep {
+      color: var(--corona-gold);
+      margin: 0 4px;
+    }
+
+    .period-pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .period-pill {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 7px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      color: #bae6fd;
+    }
+
+    .team-logo-img {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 5px;
+      border: 1px solid rgba(148, 210, 255, 0.22);
+    }
+
+    .summary-recap-box {
+      padding: 13px 15px;
+      border-radius: 14px;
+      background: rgba(56, 189, 248, 0.09);
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      color: #e0f2fe;
+      font-size: 0.85rem;
+      line-height: 1.55;
+      margin-bottom: 14px;
+    }
+
+    .stats-bars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .stat-bar-card {
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(5, 16, 33, 0.65);
+      border: 1px solid rgba(148, 210, 255, 0.12);
+    }
+
+    .stat-bar-head {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .stat-bar-track {
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(148, 210, 255, 0.15);
+      overflow: hidden;
+      display: flex;
+    }
+
+    .stat-bar-home {
+      background: linear-gradient(90deg, #0066cc, #38bdf8);
+      height: 100%;
+    }
+
+    .stat-bar-away {
+      background: linear-gradient(90deg, #f59e0b, #facc15);
+      height: 100%;
+    }
+
+    .timeline-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0 10px;
+    }
+
+    .timeline-toggle {
+      display: inline-flex;
+      gap: 6px;
+    }
+
+    .timeline-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 360px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .event-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(6, 18, 36, 0.68);
+      border: 1px solid rgba(148, 210, 255, 0.12);
+      font-size: 0.82rem;
+    }
+
+    .event-row.is-goal {
+      border-color: rgba(250, 204, 21, 0.45);
+      background: linear-gradient(135deg, rgba(250, 204, 21, 0.1) 0%, rgba(6, 18, 36, 0.8) 100%);
+    }
+
+    .event-row.is-corona-goal {
+      border-color: rgba(16, 185, 129, 0.55);
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.14) 0%, rgba(0, 85, 165, 0.25) 100%);
+    }
+
+    .event-time {
+      min-width: 68px;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 800;
+      font-size: 0.84rem;
+      color: var(--corona-gold);
+      line-height: 1.2;
+    }
+
+    .event-time small {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .event-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .event-title {
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.35;
+    }
+
+    .event-sub {
+      font-size: 0.74rem;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .event-score-badge {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 800;
+      font-size: 0.95rem;
+      padding: 3px 9px;
+      border-radius: 8px;
+      background: rgba(250, 204, 21, 0.2);
+      color: var(--corona-gold);
+      white-space: nowrap;
+    }
+
+    /* Secțiunea Rezultate & Sumar Meciuri Recente */
+    .results-section {
+      margin-bottom: 24px;
+    }
+
+    .record-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .record-chip {
+      padding: 7px 12px;
+      border-radius: 11px;
+      background: rgba(6, 18, 36, 0.65);
+      border: 1px solid rgba(148, 210, 255, 0.16);
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    .record-chip strong {
+      color: #ffffff;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(305px, 1fr));
+      gap: 12px;
+    }
+
+    .result-card {
+      padding: 15px;
+      border-radius: 16px;
+      background: rgba(6, 18, 36, 0.68);
+      border: 1px solid rgba(148, 210, 255, 0.16);
+      cursor: pointer;
+      transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .result-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(250, 204, 21, 0.55);
+      background: rgba(11, 31, 60, 0.82);
+    }
+
+    .result-card.win {
+      border-left: 4px solid #10b981;
+    }
+
+    .result-card.loss {
+      border-left: 4px solid #ef4444;
+    }
+
+    .result-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+    }
+
+    .outcome-pill {
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .outcome-win {
+      background: rgba(16, 185, 129, 0.18);
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      color: #34d399;
+    }
+
+    .outcome-loss {
+      background: rgba(239, 68, 68, 0.18);
+      border: 1px solid rgba(239, 68, 68, 0.45);
+      color: #f87171;
+    }
+
+    .result-teams-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .result-teams {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.25;
+    }
+
+    .result-score-box {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--corona-gold);
+      background: rgba(0, 85, 165, 0.3);
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      padding: 4px 12px;
+      border-radius: 10px;
+      white-space: nowrap;
+    }
+
+    .result-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.74rem;
+      color: var(--text-secondary);
+    }
+
+    .btn-view-summary {
+      padding: 5px 10px;
+      border-radius: 8px;
+      background: rgba(56, 189, 248, 0.14);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: #bae6fd;
+      font-weight: 700;
+      font-size: 0.73rem;
+      white-space: nowrap;
+    }
+
+    .day-cell.has-match.past-win {
+      background: linear-gradient(160deg, rgba(16, 185, 129, 0.25) 0%, rgba(6, 20, 38, 0.9) 100%);
+      border-color: rgba(16, 185, 129, 0.5);
+    }
+
+    .day-cell.has-match.past-loss {
+      background: linear-gradient(160deg, rgba(239, 68, 68, 0.22) 0%, rgba(6, 20, 38, 0.9) 100%);
+      border-color: rgba(239, 68, 68, 0.45);
+    }
+
+    .live-toast {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 200;
+      max-width: 360px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(6, 20, 42, 0.96);
+      border: 1px solid var(--corona-gold);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.75);
+      color: #ffffff;
+      display: none;
+      animation: slideInToast 0.25s ease;
+    }
+
+    .live-toast.show { display: block; }
+
+    @keyframes slideInToast {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .mobile-bottom-bar {
+      grid-template-columns: repeat(5, 1fr);
+    }
+
     /* Responsive Mobile */
     @media (max-width: 860px) {
       .main-grid {
@@ -1228,6 +1648,12 @@
     <!-- Banner stare date (date lipsă / bot neconfigurat / sursă blocată) -->
     <div class="data-notice" id="data-notice" role="status"></div>
 
+    <!-- Toast notificări live în aplicație -->
+    <div class="live-toast" id="live-toast" role="alert"></div>
+
+    <!-- 0) LIVE MATCH CENTER (afișat automat când există un meci în desfășurare) -->
+    <section class="ice-card live-card" id="sec-live" style="display: none;"></section>
+
     <!-- a) HERO CARD: URMĂTORUL MECI LA PATINOARUL OLIMPIC (randat din JS doar cu date reale) -->
     <section class="ice-card hero-card" id="sec-hero">
       <div id="hero-root">
@@ -1237,9 +1663,26 @@
       </div>
     </section>
 
+    <!-- b) SUMAR MECIURI TRECUTE & REZULTATE RECENTE -->
+    <section class="ice-card section-card results-section" id="sec-results">
+      <div class="section-header">
+        <h2 class="section-title">📊 Rezultate & Sumar Meciuri</h2>
+        <span style="font-size: 0.75rem; color: var(--text-secondary);">Click pe un meci pentru rezumat complet</span>
+      </div>
+      <div class="filter-pills" id="results-filter-pills" role="tablist" aria-label="Filtru rezultate">
+        <button type="button" class="filter-btn active" data-res-comp="Toate">Toate Competițiile</button>
+        <button type="button" class="filter-btn" data-res-comp="Erste Liga">Erste Liga</button>
+        <button type="button" class="filter-btn" data-res-comp="Campionatul Național">Campionatul Național</button>
+        <button type="button" class="filter-btn" data-res-comp="Cupa României">Cupa României</button>
+      </div>
+      <div class="record-strip" id="results-record-strip"></div>
+      <div class="results-grid" id="results-grid"></div>
+      <div id="results-more-wrap" style="margin-top: 14px; text-align: center;"></div>
+    </section>
+
     <!-- MAIN GRID: CALENDAR LUNAR INTERACTIV + RADAR ȘTIRI -->
     <div class="main-grid">
-      <!-- b) CALENDARUL SEZONULUI -->
+      <!-- c) CALENDARUL SEZONULUI -->
       <section class="ice-card section-card" id="sec-calendar">
         <div class="section-header">
           <h2 class="section-title">📅 Calendarul Sezonului</h2>
@@ -1279,11 +1722,11 @@
         <div class="selected-match-drawer" id="selected-match-drawer"></div>
 
         <!-- Lista rapidă a meciurilor filtrate -->
-        <div class="upcoming-list-title">Toate meciurile programate (Filtru activ)</div>
+        <div class="upcoming-list-title">Meciuri programate (Filtru activ)</div>
         <div id="filtered-matches-list"></div>
       </section>
 
-      <!-- c) RADARUL DE ANUNȚURI & ȘTIRI BILETE -->
+      <!-- d) RADARUL DE ANUNȚURI & ȘTIRI BILETE -->
       <section class="ice-card section-card" id="sec-radar">
         <div class="section-header">
           <h2 class="section-title">📡 Radar Știri & Bilete</h2>
@@ -1306,7 +1749,18 @@
     </div>
   </div>
 
-  <!-- d) PANOU DE STATUS & GHID RAPID DE CONFIGURARE (MODAL) -->
+  <!-- MODAL SUMAR COMPLET MECI -->
+  <div class="modal-backdrop" id="match-summary-modal" role="dialog" aria-modal="true" aria-labelledby="summary-modal-title">
+    <div class="modal-card" style="max-width: 740px;">
+      <div class="modal-header">
+        <h3 class="section-title" id="summary-modal-title">📋 Sumar Meci</h3>
+        <button type="button" class="btn-close-modal" id="btn-close-summary-modal" aria-label="Închide">✕</button>
+      </div>
+      <div id="summary-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- e) PANOU DE STATUS & GHID RAPID DE CONFIGURARE (MODAL) -->
   <div class="modal-backdrop" id="config-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div class="modal-card">
       <div class="modal-header">
@@ -1320,8 +1774,22 @@
           Ultima verificare automată: <strong id="modal-last-checked" style="color: #ffffff;">—</strong><br />
           <span id="modal-sources">—</span><br />
           Frecvență rulare: <strong>La fiecare 10 minute</strong> (08:00 – 23:00 ora României, 0 tokenuri AI consumate).
-          Când nu se schimbă nimic, ora verificării se actualizează o dată pe oră.
+          Pentru alerte instant la <strong>~30 secunde</strong> în timpul unui meci, pornește workflow-ul
+          <span class="code-inline">Live Match Watcher</span> din tab-ul <strong>Actions</strong> pe GitHub.
         </p>
+      </div>
+
+      <div class="step-box" style="border-color: rgba(250, 204, 21, 0.4);">
+        <h4>🚨 Alerte Automate pentru Goluri, Evenimente & Bilete</h4>
+        <ul>
+          <li><strong>Goluri în direct:</strong> notificare cu marcator, pase decisive, minut, repriză și scor actualizat (PP / SH / EN).</li>
+          <li><strong>Evenimente importante:</strong> start meci, final de repriză, prelungiri (OT/SO), eliminări majore (5+ min), portar scos (6-la-5) și scor final cu sumar.</li>
+          <li><strong>Bilete Eventim:</strong> alertă prioritară imediat ce apare un anunț nou pe <span class="code-inline">coronabrasov.ro</span>.</li>
+        </ul>
+        <div style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+          <button type="button" class="btn-sm-ice" id="btn-enable-browser-notif">🔔 Activează notificări în browser</button>
+          <span id="browser-notif-status" style="font-size: 0.76rem; color: var(--text-secondary);"></span>
+        </div>
       </div>
 
       <div class="step-box">
@@ -1365,9 +1833,13 @@
 
   <!-- BOTTOM DOCK BAR PENTRU MOBIL -->
   <nav class="mobile-bottom-bar" aria-label="Navigare rapidă">
-    <a href="#sec-hero" class="dock-item active">
+    <a href="#sec-hero" class="dock-item active" id="dock-home-link">
       <span class="dock-icon">🏒</span>
       <span>Meci</span>
+    </a>
+    <a href="#sec-results" class="dock-item">
+      <span class="dock-icon">📊</span>
+      <span>Rezultate</span>
     </a>
     <a href="#sec-calendar" class="dock-item">
       <span class="dock-icon">📅</span>
@@ -1375,7 +1847,7 @@
     </a>
     <a href="#sec-radar" class="dock-item">
       <span class="dock-icon">📡</span>
-      <span>Știri Bilete</span>
+      <span>Știri</span>
     </a>
     <button type="button" class="dock-item" id="dock-open-guide">
       <span class="dock-icon">📲</span>
@@ -1386,8 +1858,8 @@
   <script>
     /**
      * Corona Ice Tracker — logica interfeței.
-     * IMPORTANT: interfața afișează EXCLUSIV date găsite de bot pe Eventim / coronabrasov.ro
-     * (data/matches.json). Nu există date demo / inventate.
+     * IMPORTANT: interfața afișează EXCLUSIV date reale din data/matches.json
+     * (coronabrasov.ro, ersteliga.hu / api.icehockey.hu, icehockey.ro).
      */
     const EVENTIM_ARTIST_URL =
       'https://www.eventim.ro/artist/csm-corona-brasov/csm-corona-brasov-hochei-4277387/?affiliate=ROF';
@@ -1401,13 +1873,20 @@
 
     const today = new Date();
     const appState = {
-      data: { lastChecked: null, sources: {}, matches: [], news: [] },
+      data: { lastChecked: null, sources: {}, activeMatch: null, matches: [], news: [] },
       loadError: null,
       activeCompetition: 'Toate',
+      resultsCompetition: 'Toate',
+      showAllResults: false,
+      liveTimelineMode: 'all', // 'all' | 'goals'
+      summaryTimelineMode: 'all',
       calYear: today.getFullYear(),
       calMonth: today.getMonth(),
       selectedMatch: null,
-      heroMatch: null
+      heroMatch: null,
+      knownLiveEventIds: new Set(),
+      knownLiveScore: null,
+      refreshTimer: null
     };
 
     // ------------------------------------------------------------------ utilitare
@@ -1420,11 +1899,14 @@
         .replace(/'/g, '&#39;');
     }
 
-    /** Acceptă doar link-uri https către domeniile cunoscute; altfel pagina oficială Eventim. */
+    /** Acceptă doar link-uri https către domeniile oficiale cunoscute. */
     function safeUrl(url, fallback = EVENTIM_ARTIST_URL) {
       try {
         const u = new URL(url);
-        if (u.protocol === 'https:' && /(^|\.)(eventim\.ro|coronabrasov\.ro)$/.test(u.hostname)) return u.href;
+        const okHost = /(^|\.)(eventim\.ro|coronabrasov\.ro|ersteliga\.hu|icehockey\.ro|icehockey\.hu|youtube\.com|youtu\.be)$/.test(
+          u.hostname
+        );
+        if (u.protocol === 'https:' && okHost) return u.href;
       } catch (_) {}
       return fallback;
     }
@@ -1469,13 +1951,26 @@
       return days > 0 ? `Peste ${days}z ${hours}h` : `Azi, în ${hours}h`;
     }
 
+    function isCoronaWin(m) {
+      if (m.homeScore == null || m.awayScore == null) return null;
+      const c = m.isHome ? m.homeScore : m.awayScore;
+      const o = m.isHome ? m.awayScore : m.homeScore;
+      return c > o;
+    }
+
     function statusClass(status) {
-      if (status === 'Disponibil') return 'status-disponibil';
-      if (status === 'Epuizat') return 'status-epuizat';
+      if (status === 'Disponibil' || status === 'Finalizat') return 'status-disponibil';
+      if (status === 'Epuizat' || status === 'LIVE') return 'status-epuizat';
       return 'status-curand';
     }
 
     function statusLabel(m) {
+      if (m.matchState === 'live') return '🔴 ÎN DESFĂȘURARE';
+      if (m.matchState === 'finished') {
+        const win = isCoronaWin(m);
+        const ot = m.isShootout ? ' (SO)' : m.isOvertime ? ' (OT)' : '';
+        return win === true ? `🏆 Victorie${ot}` : win === false ? `📊 Înfrângere${ot}` : `✔ Finalizat${ot}`;
+      }
       if (m.stillListed === false) return '⚠️ Nu mai apare pe Eventim';
       if (m.status === 'Disponibil') return '● Bilete Disponibile';
       if (m.status === 'Epuizat') return '✕ Epuizat';
@@ -1485,10 +1980,16 @@
       return '? Status necunoscut';
     }
 
-    /** Badge care arată clar de unde vine meciul și unde duce butonul. */
     function verifyBadge(m) {
       if (m.stillListed === false) {
         return `<span class="verify-badge gone">⚠️ Nu mai este listat pe Eventim — verifică manual</span>`;
+      }
+      if (m.source === 'ersteliga.hu') {
+        const dual = m.alsoCountsFor ? ` + ${esc(m.alsoCountsFor)}` : '';
+        return `<span class="verify-badge ok">✔ Date oficiale Erste Liga${dual}</span>`;
+      }
+      if (m.source === 'icehockey.ro') {
+        return `<span class="verify-badge ok">✔ Date oficiale FRHG (icehockey.ro)</span>`;
       }
       if (m.source === 'coronabrasov.ro') {
         return `<span class="verify-badge ok">✔ Program oficial coronabrasov.ro</span>`;
@@ -1500,9 +2001,191 @@
     }
 
     function ticketButtonLabel(m) {
+      if (!m.isHome && m.source !== 'eventim') return '🔎 Vezi Bilete Acasă pe Eventim';
       if (m.ticketUrlIsDirect && m.status !== 'Epuizat') return '🎟️ Cumpără Bilete pe Eventim';
       if (m.ticketUrlIsDirect) return '🔎 Vezi evenimentul pe Eventim';
       return '🔎 Caută meciul pe pagina Eventim';
+    }
+
+    function renderTeamAvatar(name, logoUrl, isCorona) {
+      if (logoUrl && /^https:\/\//.test(logoUrl)) {
+        return `<img src="${esc(logoUrl)}" alt="${esc(name)}" class="team-logo-img" loading="lazy" />`;
+      }
+      return `<div class="team-avatar ${isCorona ? 'corona' : 'guest'}">${esc(isCorona ? 'BV' : getInitials(name))}</div>`;
+    }
+
+    function renderPeriodChips(ps) {
+      if (!ps) return '';
+      const entries = [
+        ['R1', ps.p1],
+        ['R2', ps.p2],
+        ['R3', ps.p3],
+        ['OT', ps.ot],
+        ['SO', ps.so]
+      ].filter(([, v]) => Boolean(v));
+      if (!entries.length) return '';
+      return `<div class="period-pills">${entries
+        .map(([lbl, val]) => `<span class="period-pill">${lbl}: ${esc(val)}</span>`)
+        .join('')}</div>`;
+    }
+
+    /** Generează un rezumat narativ clar în română strict din datele reale ale meciului. */
+    function buildMatchNarrative(m) {
+      const hasScore = m.homeScore !== null && m.awayScore !== null;
+      if (!hasScore) return 'Meciul nu are încă scor înregistrat.';
+
+      const otText = m.isShootout ? ' la loviturile de departajare (SO)' : m.isOvertime ? ' în prelungiri (OT)' : '';
+      const win = isCoronaWin(m);
+      const goals = (m.events || []).filter((e) => e.type === 'goal');
+      const coronaGoals = goals.filter((g) => g.isCorona);
+      const ppGoals = goals.filter((g) => (g.flags || []).some((f) => f.includes('PP') || f === '+1' || f === '+2'));
+
+      if (m.matchState === 'live') {
+        const periodTxt = m.liveInfo?.periodLabel ? `${m.liveInfo.periodLabel}` : 'desfășurare';
+        const clockTxt = m.liveInfo?.clock ? ` (${m.liveInfo.clock})` : '';
+        const lastGoal = goals[goals.length - 1];
+        const lastGoalNote = lastGoal
+          ? ` Ultimul gol: ${lastGoal.player} (${lastGoal.time}, ${lastGoal.score || ''}).`
+          : '';
+        return `Meci în ${periodTxt}${clockTxt}: ${m.homeTeam} ${m.homeScore} – ${m.awayScore} ${m.awayTeam}.${lastGoalNote}`;
+      }
+
+      const parts = [];
+      if (win === true) {
+        parts.push(
+          `Victorie pentru CSM Corona Brașov${otText}: ${m.homeTeam} ${m.homeScore} – ${m.awayScore} ${m.awayTeam} (${m.competition}).`
+        );
+      } else if (win === false) {
+        parts.push(
+          `Înfrângere pentru CSM Corona Brașov${otText}: ${m.homeTeam} ${m.homeScore} – ${m.awayScore} ${m.awayTeam} (${m.competition}).`
+        );
+      } else {
+        parts.push(`Scor final: ${m.homeTeam} ${m.homeScore} – ${m.awayScore} ${m.awayTeam}.`);
+      }
+
+      if (m.periodScores) {
+        const per = [m.periodScores.p1, m.periodScores.p2, m.periodScores.p3, m.periodScores.ot, m.periodScores.so]
+          .filter(Boolean)
+          .join(', ');
+        if (per) parts.push(`Evoluția pe reprize: (${per}).`);
+      }
+
+      if (coronaGoals.length) {
+        const counts = new Map();
+        for (const g of coronaGoals) {
+          counts.set(g.player, (counts.get(g.player) || 0) + 1);
+        }
+        const scorersList = [...counts.entries()]
+          .map(([name, c]) => (c > 1 ? `${name} (${c})` : name))
+          .join(', ');
+        parts.push(`Marcatori Corona: ${scorersList}.`);
+      }
+
+      if (ppGoals.length) {
+        parts.push(`${ppGoals.length} ${ppGoals.length === 1 ? 'gol marcat' : 'goluri marcate'} în superioritate numerică.`);
+      }
+
+      if (m.stats?.sogHome != null && m.stats?.sogAway != null) {
+        parts.push(`Șuturi pe poartă: ${m.stats.sogHome} – ${m.stats.sogAway}.`);
+      }
+
+      return parts.join(' ');
+    }
+
+    function renderStatsBars(m) {
+      const s = m.stats;
+      if (!s || (s.sogHome == null && s.pimHome == null && !s.ppHome)) return '';
+      const bars = [];
+
+      if (s.sogHome != null && s.sogAway != null) {
+        const tot = Math.max(1, s.sogHome + s.sogAway);
+        const pctHome = Math.round((s.sogHome / tot) * 100);
+        const perStr = Object.entries(s.sogByPeriod || {})
+          .map(([k, v]) => `${k.toUpperCase()}: ${v}`)
+          .join(' • ');
+        bars.push(`
+          <div class="stat-bar-card">
+            <div class="stat-bar-head">
+              <span>${esc(m.homeShort || m.homeTeam)}: ${s.sogHome}</span>
+              <span>🎯 Șuturi pe poartă</span>
+              <span>${s.sogAway} :${esc(m.awayShort || m.awayTeam)}</span>
+            </div>
+            <div class="stat-bar-track">
+              <div class="stat-bar-home" style="width:${pctHome}%"></div>
+              <div class="stat-bar-away" style="width:${100 - pctHome}%"></div>
+            </div>
+            ${perStr ? `<div style="font-size:0.68rem;color:var(--text-muted);margin-top:5px;">${esc(perStr)}</div>` : ''}
+          </div>`);
+      }
+
+      if (s.pimHome != null && s.pimAway != null) {
+        const tot = Math.max(1, s.pimHome + s.pimAway);
+        const pctHome = Math.round((s.pimHome / tot) * 100);
+        bars.push(`
+          <div class="stat-bar-card">
+            <div class="stat-bar-head">
+              <span>${esc(m.homeShort || m.homeTeam)}: ${s.pimHome} min</span>
+              <span>⏱️ Penalizări (PIM)</span>
+              <span>${s.pimAway} min :${esc(m.awayShort || m.awayTeam)}</span>
+            </div>
+            <div class="stat-bar-track">
+              <div class="stat-bar-home" style="width:${pctHome}%"></div>
+              <div class="stat-bar-away" style="width:${100 - pctHome}%"></div>
+            </div>
+          </div>`);
+      }
+
+      if (s.ppHome || s.ppAway || s.attendance) {
+        bars.push(`
+          <div class="stat-bar-card">
+            <div class="stat-bar-head"><span>📌 Alte detalii</span></div>
+            <div style="font-size:0.78rem;color:var(--text-secondary);line-height:1.45;">
+              ${s.ppHome ? `Powerplay: <strong>${esc(s.ppHome)}</strong> vs <strong>${esc(s.ppAway || '0/0')}</strong><br/>` : ''}
+              ${s.attendance ? `Spectatori în arenă: <strong>${esc(s.attendance)}</strong>` : ''}
+            </div>
+          </div>`);
+      }
+
+      return `<div class="stats-bars-grid">${bars.join('')}</div>`;
+    }
+
+    function renderEventsTimeline(events = [], mode = 'all') {
+      const filtered = mode === 'goals' ? events.filter((e) => e.type === 'goal') : events;
+      if (!filtered.length) {
+        return `<div style="font-size:0.82rem;color:var(--text-muted);padding:8px 0;">
+          ${mode === 'goals' ? 'Niciun gol înregistrat încă.' : 'Nu există evenimente detaliate înregistrate.'}
+        </div>`;
+      }
+
+      return `<div class="timeline-list">${filtered
+        .map((ev) => {
+          const isGoal = ev.type === 'goal';
+          const cls = isGoal ? (ev.isCorona ? 'is-corona-goal' : 'is-goal') : '';
+          const icon = isGoal ? '🚨' : ev.type === 'penalty' ? (ev.isMajor ? '🟥' : '🟨') : ev.type === 'goalie' ? '🥅' : '⏱️';
+          const flags = (ev.flags || []).length ? ` <span class="kw-tag">${esc(ev.flags.join(' '))}</span>` : '';
+          const sub =
+            ev.type === 'goal'
+              ? `${ev.teamName ? `${esc(ev.teamName)}` : ''}${ev.assists?.length ? ` • Pase: ${esc(ev.assists.join(', '))}` : ''}`
+              : ev.type === 'penalty'
+              ? `${esc(ev.teamName || '')}${ev.cause ? ` • ${esc(ev.cause)}` : ''}`
+              : esc(ev.teamName || '');
+          const title =
+            ev.type === 'goal'
+              ? `${icon} GOL ${esc(ev.player)}${flags}`
+              : ev.type === 'penalty'
+              ? `${icon} ${esc(ev.player)} — ${esc(ev.label)}`
+              : `${icon} ${esc(ev.label || ev.period)}`;
+          return `
+            <div class="event-row ${cls}">
+              <div class="event-time">${esc(ev.time || '—')}<small>${esc(ev.period || '')}</small></div>
+              <div class="event-body">
+                <div class="event-title">${title}</div>
+                ${sub ? `<div class="event-sub">${sub}</div>` : ''}
+              </div>
+              ${ev.score ? `<div class="event-score-badge">${esc(ev.score)}</div>` : ''}
+            </div>`;
+        })
+        .join('')}</div>`;
     }
 
     // ------------------------------------------------------------------ .ics
@@ -1584,31 +2267,114 @@
         cls = 'error';
         html = location.protocol === 'file:'
           ? `<strong>Pagina e deschisă direct din fișier</strong>, așa că browserul nu poate citi <code>data/matches.json</code>.
-             Deschide-o prin GitHub Pages sau un server local (<code>npx serve .</code>).
-             Până atunci, verifică direct pe <a href="${EVENTIM_ARTIST_URL}" target="_blank" rel="noopener">Eventim</a>.`
-          : `<strong>Nu am putut încărca datele</strong> (${esc(appState.loadError)}).
-             Verifică direct pe <a href="${EVENTIM_ARTIST_URL}" target="_blank" rel="noopener">Eventim</a>.`;
+             Deschide-o prin GitHub Pages sau un server local (<code>npx serve .</code>).`
+          : `<strong>Nu am putut încărca datele</strong> (${esc(appState.loadError)}).`;
       } else if (!d.lastChecked) {
         html = `<strong>Botul nu a rulat încă.</strong> Lista se va umple automat după prima rulare din GitHub Actions
                 (vezi <em>📲 Alerte &amp; Instalare</em>). Nu sunt afișate meciuri inventate.`;
-      } else if (d.sources?.coronabrasov && d.sources.coronabrasov.ok === false) {
-        cls = 'error';
-        html = `<strong>Ultima verificare a site-ului coronabrasov.ro a eșuat</strong> (${esc(d.sources.coronabrasov.error || 'eroare necunoscută')}).
-                Poți verifica direct pe <a href="${EVENTIM_ARTIST_URL}" target="_blank" rel="noopener">Eventim</a>.`;
       } else if (Date.now() - new Date(d.lastChecked).getTime() > 3 * 3600 * 1000) {
         html = `<strong>Datele sunt mai vechi de 3 ore</strong> (ultima verificare: ${esc(formatDateTime(d.lastChecked))}).
-                Posibil ca botul să fie oprit noaptea (23:00–08:00) sau workflow-ul să fi eșuat.`;
+                Posibil ca botul să fie oprit noaptea (23:00–08:00) sau să aștepte următorul ciclu.`;
       }
 
       el.className = `data-notice ${cls}${html ? ' show' : ''}`;
       el.innerHTML = html;
     }
 
+    // ------------------------------------------------------------------ LIVE MATCH CENTER
+    function renderLiveMatchCenter() {
+      const sec = document.getElementById('sec-live');
+      const m = appState.data.activeMatch || (appState.data.matches || []).find((x) => x.matchState === 'live');
+      const dockLink = document.getElementById('dock-home-link');
+
+      if (!m) {
+        sec.style.display = 'none';
+        sec.innerHTML = '';
+        if (dockLink) {
+          dockLink.setAttribute('href', '#sec-hero');
+          dockLink.querySelector('span:last-child').textContent = 'Meci';
+        }
+        return;
+      }
+
+      sec.style.display = 'block';
+      if (dockLink) {
+        dockLink.setAttribute('href', '#sec-live');
+        dockLink.querySelector('span:last-child').textContent = 'Live';
+      }
+
+      const mode = appState.liveTimelineMode;
+      const periodBadge = [m.liveInfo?.periodLabel, m.liveInfo?.clock].filter(Boolean).join(' • ') || 'În desfășurare';
+      const gcUrl = m.links?.gameCenter ? safeUrl(m.links.gameCenter) : null;
+      const vidUrl = m.links?.video ? safeUrl(m.links.video) : null;
+
+      sec.innerHTML = `
+        <div class="hero-top-row">
+          <div class="hero-badge-group">
+            <span class="badge-live"><span class="pulse-red"></span> LIVE • ${esc(periodBadge)}</span>
+            <span class="badge-comp">${esc(m.competition || 'Hochei')}</span>
+          </div>
+          <span style="font-size:0.75rem;color:#fca5a5;font-weight:700;">🔄 Actualizare auto la 30s</span>
+        </div>
+
+        <div class="verify-line">
+          ${verifyBadge(m)}
+          <span>📍 ${esc(m.location || 'Arenă')}</span>
+        </div>
+
+        <div class="scoreboard-box">
+          <div class="team-block">
+            ${renderTeamAvatar(m.homeTeam, m.homeLogo, m.isHome)}
+            <div class="team-name">${esc(m.homeTeam)}</div>
+            <div class="team-tag">Gazde</div>
+          </div>
+          <div class="score-center">
+            <div class="score-big">${m.homeScore ?? 0}<span class="sep">:</span>${m.awayScore ?? 0}</div>
+            ${renderPeriodChips(m.periodScores)}
+          </div>
+          <div class="team-block">
+            ${renderTeamAvatar(m.awayTeam, m.awayLogo, !m.isHome)}
+            <div class="team-name">${esc(m.awayTeam)}</div>
+            <div class="team-tag">Oaspeți</div>
+          </div>
+        </div>
+
+        <div class="summary-recap-box">
+          <strong>📝 Sumar Live:</strong> ${esc(buildMatchNarrative(m))}
+        </div>
+
+        ${renderStatsBars(m)}
+
+        <div class="timeline-header">
+          <strong style="font-size:0.9rem;color:#ffffff;">⚡ Evenimente Live (Goluri & Eliminări)</strong>
+          <div class="timeline-toggle">
+            <button type="button" class="filter-btn ${mode === 'all' ? 'active' : ''}" data-live-mode="all">Toate</button>
+            <button type="button" class="filter-btn ${mode === 'goals' ? 'active' : ''}" data-live-mode="goals">Doar Goluri</button>
+          </div>
+        </div>
+        ${renderEventsTimeline([...(m.events || [])].reverse(), mode)}
+
+        <div class="drawer-actions" style="margin-top:14px;">
+          ${vidUrl ? `<a href="${esc(vidUrl)}" target="_blank" rel="noopener noreferrer" class="btn-sm-gold">📺 Urmărește Transmisiunea</a>` : ''}
+          ${gcUrl ? `<a href="${esc(gcUrl)}" target="_blank" rel="noopener noreferrer" class="btn-sm-ice" style="text-decoration:none;">📊 Game Center Oficial ↗</a>` : ''}
+          <button type="button" class="btn-sm-ice" id="live-browser-notif-btn">🔔 Alerte Gol în Browser</button>
+        </div>`;
+
+      sec.querySelectorAll('[data-live-mode]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          appState.liveTimelineMode = btn.getAttribute('data-live-mode');
+          renderLiveMatchCenter();
+        });
+      });
+      const notifBtn = document.getElementById('live-browser-notif-btn');
+      if (notifBtn) notifBtn.addEventListener('click', requestBrowserNotifications);
+    }
+
     // ------------------------------------------------------------------ hero
     function getUpcomingMatches() {
       const todayIso = localIsoDate();
       return (appState.data.matches || [])
-        .filter((m) => m.date && m.date >= todayIso)
+        .filter((m) => m.date && m.date >= todayIso && m.matchState !== 'finished' && m.matchState !== 'live')
         .sort((a, b) => `${a.date} ${a.time || ''}`.localeCompare(`${b.date} ${b.time || ''}`));
     }
 
@@ -1621,35 +2387,38 @@
       if (!m) {
         root.innerHTML = `
           <div class="hero-empty">
-            <h3>Niciun meci viitor detectat pe Eventim</h3>
-            <p>Botul nu a găsit încă meciuri programate cu bilete pe Eventim${appState.data.lastChecked ? '' : ' (nu a rulat încă)'}.
-               Vei primi notificare pe telefon imediat ce apare unul.</p>
+            <h3>Niciun meci viitor programat în calendar</h3>
+            <p>Botul verifică constant programul oficial și anunțurile de bilete. Poți consulta rezultatele recente mai jos.</p>
             <a href="${EVENTIM_ARTIST_URL}" target="_blank" rel="noopener noreferrer" class="btn-primary-ticket">
-              🔎 Verifică manual pagina Eventim Corona
+              🔎 Verifică pagina Eventim Corona
             </a>
           </div>`;
         return;
       }
 
       const url = safeUrl(m.ticketUrl);
+      const isToday = m.date === localIsoDate();
+      const homeLabel = m.homeTeam || 'CSM Corona Brașov';
+      const awayLabel = m.awayTeam || m.opponent || m.title;
+
       root.innerHTML = `
         <div class="hero-top-row">
           <div class="hero-badge-group">
-            <span class="badge-next">🔥 Următorul Meci</span>
-            <span class="badge-comp">${esc(m.competition || 'Hochei')}</span>
+            <span class="badge-next">${isToday ? '🔥 MECI AZI' : '🔥 Următorul Meci'}</span>
+            <span class="badge-comp">${esc(m.competition || 'Hochei')}${m.alsoCountsFor ? ` + ${esc(m.alsoCountsFor)}` : ''}</span>
           </div>
           <span class="status-pill ${m.stillListed === false ? 'status-epuizat' : statusClass(m.status)}">${esc(statusLabel(m))}</span>
         </div>
 
         <div class="verify-line">
           ${verifyBadge(m)}
-          <span>Detectat de bot: ${esc(formatDateTime(m.firstSeen))}</span>
+          ${m.gameNo ? `<span>Meci: <strong>${esc(m.gameNo)}</strong></span>` : ''}
         </div>
 
         <div class="hero-matchup">
           <div class="team-block">
-            <div class="team-avatar corona">BV</div>
-            <div class="team-name">CSM Corona Brașov</div>
+            ${renderTeamAvatar(homeLabel, m.homeLogo, m.isHome)}
+            <div class="team-name">${esc(homeLabel)}</div>
             <div class="team-tag">Gazde</div>
           </div>
           <div class="vs-divider">
@@ -1657,17 +2426,17 @@
             <div class="countdown-chip">${esc(getCountdownText(m.date, m.time))}</div>
           </div>
           <div class="team-block">
-            <div class="team-avatar guest">${esc(getInitials(m.opponent || '?'))}</div>
-            <div class="team-name">${esc(m.opponent || m.title)}</div>
+            ${renderTeamAvatar(awayLabel, m.awayLogo, !m.isHome)}
+            <div class="team-name">${esc(awayLabel)}</div>
             <div class="team-tag">Oaspeți</div>
           </div>
         </div>
 
         <div class="hero-meta-grid">
           <div class="meta-box"><div class="meta-label">📅 Data</div><div class="meta-val">${esc(formatRoDate(m.date))}</div></div>
-          <div class="meta-box"><div class="meta-label">⏰ Ora</div><div class="meta-val">${esc(m.time || 'Vezi pe Eventim')}</div></div>
+          <div class="meta-box"><div class="meta-label">⏰ Ora</div><div class="meta-val">${esc(m.time || 'Vezi programul')}</div></div>
           <div class="meta-box"><div class="meta-label">📍 Arena</div><div class="meta-val">${esc(m.location || 'Patinoarul Olimpic Brașov')}</div></div>
-          <div class="meta-box"><div class="meta-label">🏷️ Preț de la</div><div class="meta-val gold">${esc(m.startingPrice || 'Vezi pe Eventim')}</div></div>
+          <div class="meta-box"><div class="meta-label">🏷️ Bilete</div><div class="meta-val gold">${esc(m.startingPrice || (m.isHome ? 'Vezi pe Eventim' : 'Deplasare'))}</div></div>
         </div>
 
         <div class="hero-cta-row">
@@ -1678,11 +2447,188 @@
       document.getElementById('hero-ics-btn').addEventListener('click', () => downloadIcsForMatch(m));
     }
 
+    // ------------------------------------------------------------------ REZULTATE & SUMAR MECIURI TRECUTE
+    function getFinishedMatches() {
+      return (appState.data.matches || [])
+        .filter((m) => m.matchState === 'finished' && m.homeScore !== null && m.awayScore !== null)
+        .filter(
+          (m) =>
+            appState.resultsCompetition === 'Toate' ||
+            m.competition === appState.resultsCompetition ||
+            m.alsoCountsFor === appState.resultsCompetition
+        )
+        .sort((a, b) => `${b.date} ${b.time || ''}`.localeCompare(`${a.date} ${a.time || ''}`));
+    }
+
+    function renderResultsSection() {
+      const strip = document.getElementById('results-record-strip');
+      const grid = document.getElementById('results-grid');
+      const moreWrap = document.getElementById('results-more-wrap');
+      const finished = getFinishedMatches();
+
+      if (!finished.length) {
+        strip.innerHTML = '';
+        grid.innerHTML = `<div style="font-size:0.84rem;color:var(--text-secondary);">Nu există încă meciuri încheiate pentru acest filtru.</div>`;
+        moreWrap.innerHTML = '';
+        return;
+      }
+
+      let wins = 0;
+      let losses = 0;
+      let gf = 0;
+      let ga = 0;
+      for (const m of finished) {
+        const c = m.isHome ? m.homeScore : m.awayScore;
+        const o = m.isHome ? m.awayScore : m.homeScore;
+        gf += c;
+        ga += o;
+        if (c > o) wins++;
+        else losses++;
+      }
+
+      strip.innerHTML = `
+        <div class="record-chip">Meciuri jucate: <strong>${finished.length}</strong></div>
+        <div class="record-chip" style="border-color:rgba(16,185,129,0.4);color:#6ee7b7;">Victorii: <strong>${wins}</strong></div>
+        <div class="record-chip" style="border-color:rgba(239,68,68,0.4);color:#fca5a5;">Înfrângeri: <strong>${losses}</strong></div>
+        <div class="record-chip">Golaveraj Corona: <strong>${gf} – ${ga}</strong></div>`;
+
+      const visible = appState.showAllResults ? finished : finished.slice(0, 6);
+      grid.innerHTML = visible
+        .map((m) => {
+          const win = isCoronaWin(m);
+          const otTag = m.isShootout ? ' SO' : m.isOvertime ? ' OT' : '';
+          const perStr = m.periodScores
+            ? [m.periodScores.p1, m.periodScores.p2, m.periodScores.p3, m.periodScores.ot, m.periodScores.so]
+                .filter(Boolean)
+                .join(', ')
+            : '';
+          const coronaGoals = (m.events || []).filter((e) => e.type === 'goal' && e.isCorona);
+          const scorersHint = coronaGoals.length
+            ? `⚽ ${coronaGoals
+                .slice(0, 3)
+                .map((g) => g.player.split(' ').slice(-1)[0])
+                .join(', ')}${coronaGoals.length > 3 ? ` +${coronaGoals.length - 3}` : ''}`
+            : m.location || '';
+
+          return `
+            <article class="result-card ${win ? 'win' : 'loss'}" data-summary-id="${esc(m.id)}">
+              <div class="result-top">
+                <span>${esc(formatRoDate(m.date))} • ${esc(m.competition)}</span>
+                <span class="outcome-pill ${win ? 'outcome-win' : 'outcome-loss'}">${win ? `Victorie${otTag}` : `Înfrângere${otTag}`}</span>
+              </div>
+              <div class="result-teams-row">
+                <div class="result-teams">
+                  <div>${esc(m.homeTeam)}</div>
+                  <div style="color:var(--text-secondary);font-size:0.94rem;">vs ${esc(m.awayTeam)}</div>
+                </div>
+                <div class="result-score-box">${m.homeScore} : ${m.awayScore}</div>
+              </div>
+              <div class="result-foot">
+                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                  ${perStr ? `(${esc(perStr)}) • ` : ''}${esc(scorersHint)}
+                </span>
+                <span class="btn-view-summary">📋 Sumar</span>
+              </div>
+            </article>`;
+        })
+        .join('');
+
+      grid.querySelectorAll('.result-card').forEach((card) => {
+        card.addEventListener('click', () => openMatchSummary(card.getAttribute('data-summary-id')));
+      });
+
+      if (finished.length > 6) {
+        moreWrap.innerHTML = `<button type="button" class="btn-sm-ice" id="btn-toggle-all-results">
+          ${appState.showAllResults ? '▲ Arată doar ultimele 6' : `▼ Vezi toate cele ${finished.length} rezultate`}
+        </button>`;
+        document.getElementById('btn-toggle-all-results').addEventListener('click', () => {
+          appState.showAllResults = !appState.showAllResults;
+          renderResultsSection();
+        });
+      } else {
+        moreWrap.innerHTML = '';
+      }
+    }
+
+    function openMatchSummary(matchId) {
+      const m = (appState.data.matches || []).find((x) => x.id === matchId);
+      if (!m) return;
+
+      const modal = document.getElementById('match-summary-modal');
+      const titleEl = document.getElementById('summary-modal-title');
+      const bodyEl = document.getElementById('summary-modal-body');
+
+      titleEl.textContent = `📋 ${m.competition}${m.alsoCountsFor ? ` / ${m.alsoCountsFor}` : ''} • ${formatRoDate(m.date)}`;
+
+      const renderModalContent = () => {
+        const mode = appState.summaryTimelineMode;
+        const gcUrl = m.links?.gameCenter ? safeUrl(m.links.gameCenter) : null;
+        const vidUrl = m.links?.video ? safeUrl(m.links.video) : null;
+        const pdfUrl = m.links?.reportPdf ? safeUrl(m.links.reportPdf) : null;
+        const otTag = m.isShootout ? ' (SO)' : m.isOvertime ? ' (OT)' : '';
+
+        bodyEl.innerHTML = `
+          <div class="verify-line">${verifyBadge(m)}<span>📍 ${esc(m.location || 'Arenă')}</span></div>
+
+          <div class="scoreboard-box">
+            <div class="team-block">
+              ${renderTeamAvatar(m.homeTeam, m.homeLogo, m.isHome)}
+              <div class="team-name">${esc(m.homeTeam)}</div>
+              <div class="team-tag">Gazde</div>
+            </div>
+            <div class="score-center">
+              <div class="score-big">${m.homeScore ?? '-'}<span class="sep">:</span>${m.awayScore ?? '-'}</div>
+              <div style="font-size:0.74rem;color:var(--corona-gold);font-weight:700;">${esc(statusLabel(m))}${esc(otTag)}</div>
+              ${renderPeriodChips(m.periodScores)}
+            </div>
+            <div class="team-block">
+              ${renderTeamAvatar(m.awayTeam, m.awayLogo, !m.isHome)}
+              <div class="team-name">${esc(m.awayTeam)}</div>
+              <div class="team-tag">Oaspeți</div>
+            </div>
+          </div>
+
+          <div class="summary-recap-box">
+            <strong>📝 Rezumat Meci:</strong> ${esc(buildMatchNarrative(m))}
+          </div>
+
+          ${renderStatsBars(m)}
+
+          <div class="timeline-header">
+            <strong style="font-size:0.9rem;color:#ffffff;">🏒 Cronologia Meciului (${(m.events || []).filter((e) => e.type === 'goal').length} goluri)</strong>
+            <div class="timeline-toggle">
+              <button type="button" class="filter-btn ${mode === 'all' ? 'active' : ''}" data-sum-mode="all">Toate</button>
+              <button type="button" class="filter-btn ${mode === 'goals' ? 'active' : ''}" data-sum-mode="goals">Doar Goluri</button>
+            </div>
+          </div>
+          ${renderEventsTimeline(m.events || [], mode)}
+
+          <div class="drawer-actions" style="margin-top:16px;">
+            ${gcUrl ? `<a href="${esc(gcUrl)}" target="_blank" rel="noopener noreferrer" class="btn-sm-gold">📊 Game Center Oficial</a>` : ''}
+            ${vidUrl ? `<a href="${esc(vidUrl)}" target="_blank" rel="noopener noreferrer" class="btn-sm-ice" style="text-decoration:none;">📺 Video Rezumat</a>` : ''}
+            ${pdfUrl ? `<a href="${esc(pdfUrl)}" target="_blank" rel="noopener noreferrer" class="btn-sm-ice" style="text-decoration:none;">📄 Foaie Oficială PDF</a>` : ''}
+          </div>`;
+
+        bodyEl.querySelectorAll('[data-sum-mode]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            appState.summaryTimelineMode = btn.getAttribute('data-sum-mode');
+            renderModalContent();
+          });
+        });
+      };
+
+      appState.summaryTimelineMode = 'all';
+      renderModalContent();
+      modal.classList.add('open');
+    }
+
     // ------------------------------------------------------------------ calendar
     function getFilteredMatches() {
       const all = appState.data.matches || [];
       if (appState.activeCompetition === 'Toate') return all;
-      return all.filter((m) => m.competition === appState.activeCompetition);
+      return all.filter(
+        (m) => m.competition === appState.activeCompetition || m.alsoCountsFor === appState.activeCompetition
+      );
     }
 
     function renderCalendar() {
@@ -1719,14 +2665,33 @@
           cell.classList.add('has-match');
           if (appState.selectedMatch && appState.selectedMatch.id === match.id) cell.classList.add('selected');
 
+          const isFinished = match.matchState === 'finished' && match.homeScore != null;
+          const win = isFinished ? isCoronaWin(match) : null;
+          if (win === true) cell.classList.add('past-win');
+          else if (win === false) cell.classList.add('past-loss');
+
           const dot = document.createElement('span');
-          dot.className = 'day-status-dot ' + (match.status === 'Disponibil' && match.stillListed !== false
-            ? 'dot-disponibil' : match.status === 'Epuizat' || match.stillListed === false ? 'dot-epuizat' : 'dot-curand');
+          const dotCls = isFinished
+            ? win
+              ? 'dot-disponibil'
+              : 'dot-epuizat'
+            : match.matchState === 'live'
+            ? 'dot-epuizat'
+            : match.status === 'Disponibil' && match.stillListed !== false
+            ? 'dot-disponibil'
+            : match.status === 'Epuizat' || match.stillListed === false
+            ? 'dot-epuizat'
+            : 'dot-curand';
+          dot.className = `day-status-dot ${dotCls}`;
           cell.appendChild(dot);
 
           const chip = document.createElement('div');
           chip.className = 'day-match-chip';
-          chip.textContent = (match.opponent || match.title).split(' ')[0];
+          chip.textContent = isFinished
+            ? `${match.homeScore}-${match.awayScore}${match.isOvertime ? ' OT' : ''}`
+            : match.matchState === 'live'
+            ? `LIVE ${match.homeScore ?? 0}-${match.awayScore ?? 0}`
+            : (match.opponent || match.title).split(' ')[0];
           cell.appendChild(chip);
 
           cell.addEventListener('click', () => {
@@ -1748,43 +2713,56 @@
       if (!m) {
         const any = getFilteredMatches().length > 0;
         drawer.innerHTML = `<div style="font-size:0.84rem;color:var(--text-secondary);">
-          ${any ? 'Apasă pe o zi marcată din calendar sau pe un meci din listă.' : 'Niciun meci detectat pe Eventim pentru acest filtru.'}</div>`;
+          ${any ? 'Apasă pe o zi marcată din calendar sau pe un meci din listă.' : 'Niciun meci detectat pentru acest filtru.'}</div>`;
         return;
       }
 
       const url = safeUrl(m.ticketUrl);
+      const isFinished = m.matchState === 'finished' && m.homeScore != null;
+
       drawer.innerHTML = `
         <div class="drawer-top">
           <div class="drawer-title">🏒 ${esc(m.title)}</div>
-          <span class="status-pill ${m.stillListed === false ? 'status-epuizat' : statusClass(m.status)}" style="font-size:0.72rem;padding:3px 10px;">
-            ${esc(m.stillListed === false ? 'Nelistat' : m.status || 'Necunoscut')}
+          <span class="status-pill ${statusClass(m.status)}" style="font-size:0.72rem;padding:3px 10px;">
+            ${esc(isFinished ? `${m.homeScore} : ${m.awayScore}` : m.status || 'Programat')}
           </span>
         </div>
         <div class="verify-line">${verifyBadge(m)}</div>
         <div class="drawer-meta">
-          🏆 <strong>${esc(m.competition || 'Hochei')}</strong> • 📅 ${esc(formatRoDate(m.date))}${m.time ? ` la ora <strong>${esc(m.time)}</strong>` : ''}<br/>
-          📍 ${esc(m.location || 'Patinoarul Olimpic Brașov')} • 💰 Preț de la:
-          <strong style="color:var(--corona-gold)">${esc(m.startingPrice || 'vezi pe Eventim')}</strong>
+          🏆 <strong>${esc(m.competition || 'Hochei')}</strong>${m.alsoCountsFor ? ` + ${esc(m.alsoCountsFor)}` : ''} • 📅 ${esc(formatRoDate(m.date))}${m.time ? ` la ora <strong>${esc(m.time)}</strong>` : ''}<br/>
+          📍 ${esc(m.location || 'Patinoarul Olimpic Brașov')}
+          ${isFinished ? `<br/>📝 ${esc(buildMatchNarrative(m))}` : ''}
         </div>
         <div class="drawer-actions">
-          <a href="${esc(url)}" target="_blank" rel="noopener noreferrer" class="btn-sm-gold">${esc(ticketButtonLabel(m))}</a>
-          <button type="button" class="btn-sm-ice" id="drawer-ics-btn">📅 Salvează în Calendar (.ics)</button>
+          ${
+            isFinished
+              ? `<button type="button" class="btn-sm-gold" id="drawer-summary-btn" style="border:none;cursor:pointer;">📋 Vezi Sumarul Meciului</button>`
+              : `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer" class="btn-sm-gold">${esc(ticketButtonLabel(m))}</a>
+                 <button type="button" class="btn-sm-ice" id="drawer-ics-btn">📅 Salvează în Calendar (.ics)</button>`
+          }
         </div>`;
 
-      document.getElementById('drawer-ics-btn').addEventListener('click', () => downloadIcsForMatch(m));
+      const sumBtn = document.getElementById('drawer-summary-btn');
+      if (sumBtn) sumBtn.addEventListener('click', () => openMatchSummary(m.id));
+      const icsBtn = document.getElementById('drawer-ics-btn');
+      if (icsBtn) icsBtn.addEventListener('click', () => downloadIcsForMatch(m));
     }
 
     function renderFilteredMatchesList(matches) {
       const container = document.getElementById('filtered-matches-list');
-      if (!matches.length) {
-        container.innerHTML = `<div style="font-size:0.82rem;color:var(--text-muted);">Niciun meci detectat pe Eventim în această categorie.</div>`;
+      const todayIso = localIsoDate();
+      const upcomingOnly = matches.filter((m) => m.date >= todayIso || m.matchState === 'live');
+      const listToShow = upcomingOnly.length ? upcomingOnly : matches.slice(-10).reverse();
+
+      if (!listToShow.length) {
+        container.innerHTML = `<div style="font-size:0.82rem;color:var(--text-muted);">Niciun meci în această categorie.</div>`;
         return;
       }
 
-      container.innerHTML = matches
+      container.innerHTML = listToShow
         .map((m) => {
           const [, mon, day] = m.date.split('-').map(Number);
-          const gone = m.stillListed === false;
+          const isFinished = m.matchState === 'finished' && m.homeScore != null;
           return `
             <div class="match-list-item" data-match-id="${esc(m.id)}">
               <div class="match-list-date">
@@ -1792,11 +2770,11 @@
                 <div class="d-mon">${MONTHS_SHORT_RO[(mon || 1) - 1]}</div>
               </div>
               <div class="match-list-info">
-                <div class="match-list-opp">vs. ${esc(m.opponent || m.title)}</div>
-                <div class="match-list-sub">${esc(m.competition || 'Hochei')}${m.time ? ' • Ora ' + esc(m.time) : ''}${m.startingPrice ? ' • ' + esc(m.startingPrice) : ''}${m.ticketUrlIsDirect ? ' • ✔ link direct' : ''}</div>
+                <div class="match-list-opp">${m.isHome ? 'vs.' : '@'} ${esc(m.opponent || m.title)}</div>
+                <div class="match-list-sub">${esc(m.competition || 'Hochei')}${m.time ? ' • Ora ' + esc(m.time) : ''}${m.isHome ? ' • Acasă' : ' • Deplasare'}</div>
               </div>
-              <span class="status-pill ${gone ? 'status-epuizat' : statusClass(m.status)}" style="font-size:0.7rem;padding:4px 9px;">
-                ${esc(gone ? 'Nelistat' : m.status || '?')}
+              <span class="status-pill ${statusClass(m.status)}" style="font-size:0.7rem;padding:4px 9px;">
+                ${esc(isFinished ? `${m.homeScore}:${m.awayScore}` : m.status || '?')}
               </span>
             </div>`;
         })
@@ -1842,11 +2820,15 @@
         .join('');
     }
 
-    // ------------------------------------------------------------------ status
+    // ------------------------------------------------------------------ status & alerte browser
     function renderLastChecked() {
       const d = appState.data;
       const formatted = d.lastChecked ? formatDateTime(d.lastChecked) : 'niciodată';
-      document.getElementById('last-checked-text').textContent = d.lastChecked ? `Bot • ${formatted}` : 'Bot neactivat';
+      document.getElementById('last-checked-text').textContent = d.activeMatch
+        ? `🔴 LIVE • ${formatted}`
+        : d.lastChecked
+        ? `Bot • ${formatted}`
+        : 'Bot neactivat';
       document.getElementById('modal-last-checked').textContent = formatted;
 
       const srcLine = (s, name) =>
@@ -1855,42 +2837,120 @@
           : s.ok
           ? `${name}: ✅ OK (${s.found} găsite)`
           : `${name}: ❌ ${esc(s.error || 'eroare')}`;
-      document.getElementById('modal-sources').innerHTML =
-        srcLine(d.sources?.coronabrasov, 'coronabrasov.ro');
+      document.getElementById('modal-sources').innerHTML = [
+        srcLine(d.sources?.coronabrasov, 'coronabrasov.ro'),
+        srcLine(d.sources?.ersteliga, 'ersteliga.hu'),
+        srcLine(d.sources?.icehockeyro, 'icehockey.ro')
+      ].join(' • ');
+    }
+
+    function showLiveToast(title, body) {
+      const toast = document.getElementById('live-toast');
+      toast.innerHTML = `<div style="font-weight:800;color:var(--corona-gold);margin-bottom:4px;">${esc(title)}</div>
+        <div style="font-size:0.82rem;color:var(--text-primary);line-height:1.4;">${esc(body)}</div>`;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 7000);
+    }
+
+    function updateBrowserNotifStatus() {
+      const el = document.getElementById('browser-notif-status');
+      if (!el) return;
+      if (!('Notification' in window)) {
+        el.textContent = 'Browserul nu suportă notificări web.';
+      } else if (Notification.permission === 'granted') {
+        el.textContent = '✅ Activate pentru această pagină.';
+      } else if (Notification.permission === 'denied') {
+        el.textContent = '❌ Blocate din setările browserului.';
+      } else {
+        el.textContent = 'Neactivate încă.';
+      }
+    }
+
+    async function requestBrowserNotifications() {
+      if (!('Notification' in window)) return;
+      const perm = await Notification.requestPermission();
+      updateBrowserNotifStatus();
+      if (perm === 'granted') {
+        showLiveToast('🔔 Notificări Browser Activate', 'Vei primi alerte instant când pagina detectează un gol!');
+      }
+    }
+
+    function checkLiveTransitions(newActive) {
+      if (!newActive) {
+        appState.knownLiveScore = null;
+        return;
+      }
+      const events = newActive.events || [];
+      if (appState.knownLiveScore === null) {
+        events.forEach((e) => appState.knownLiveEventIds.add(e.id));
+        appState.knownLiveScore = `${newActive.homeScore ?? 0}:${newActive.awayScore ?? 0}`;
+        return;
+      }
+
+      for (const ev of events) {
+        if (appState.knownLiveEventIds.has(ev.id)) continue;
+        appState.knownLiveEventIds.add(ev.id);
+        if (ev.type === 'goal') {
+          const title = ev.isCorona ? `🚨 GOOOL CORONA! (${ev.score || ''})` : `⚽ Gol ${ev.teamName || ''} (${ev.score || ''})`;
+          const body = `${ev.player} • ${ev.time} (${ev.period})`;
+          showLiveToast(title, body);
+          if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification(title, { body });
+          }
+        }
+      }
+      appState.knownLiveScore = `${newActive.homeScore ?? 0}:${newActive.awayScore ?? 0}`;
+    }
+
+    function scheduleAutoRefresh() {
+      if (appState.refreshTimer) clearInterval(appState.refreshTimer);
+      const hasLive = Boolean(appState.data.activeMatch);
+      const intervalMs = hasLive ? 30000 : 120000;
+      appState.refreshTimer = setInterval(() => loadMatchesData({ isRefresh: true }), intervalMs);
     }
 
     // ------------------------------------------------------------------ încărcare
-    async function loadMatchesData() {
+    async function loadMatchesData({ isRefresh = false } = {}) {
       try {
         const res = await fetch(`./data/matches.json?t=${Date.now()}`, { cache: 'no-store' });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json = await res.json();
+        const allowedSources = new Set(['eventim', 'coronabrasov.ro', 'ersteliga.hu', 'icehockey.ro']);
         appState.data = {
           lastChecked: json.lastChecked || null,
           sources: json.sources || {},
-          // Afișăm meciuri provenite de pe Eventim sau din programul oficial coronabrasov.ro
+          activeMatch: json.activeMatch || null,
           matches: (json.matches || []).filter(
-            (m) => m && (m.source === 'eventim' || m.source === 'coronabrasov.ro') && /^\d{4}-\d{2}-\d{2}$/.test(m.date)
+            (m) => m && allowedSources.has(m.source) && /^\d{4}-\d{2}-\d{2}$/.test(m.date)
           ),
           news: (json.news || []).filter((n) => n && n.source === 'coronabrasov.ro')
         };
+        appState.loadError = null;
       } catch (err) {
         appState.loadError = err.message || 'eroare de rețea';
       }
 
-      const first = getUpcomingMatches()[0];
-      if (first) {
-        const [y, m] = first.date.split('-').map(Number);
-        appState.calYear = y;
-        appState.calMonth = m - 1;
-        appState.selectedMatch = first;
+      checkLiveTransitions(appState.data.activeMatch);
+
+      if (!isRefresh) {
+        const first = getUpcomingMatches()[0] || (appState.data.matches || []).slice(-1)[0];
+        if (first) {
+          const [y, m] = first.date.split('-').map(Number);
+          appState.calYear = y;
+          appState.calMonth = m - 1;
+          appState.selectedMatch = first;
+        }
       }
 
       renderDataNotice();
       renderLastChecked();
+      renderLiveMatchCenter();
       renderHeroCard();
+      renderResultsSection();
       renderCalendar();
       renderNewsRadar();
+      updateBrowserNotifStatus();
+      if (!isRefresh || Boolean(appState.data.activeMatch)) scheduleAutoRefresh();
     }
 
     // ------------------------------------------------------------------ evenimente
@@ -1906,27 +2966,49 @@
         renderCalendar();
       });
 
-      document.querySelectorAll('.filter-btn').forEach((btn) => {
+      document.querySelectorAll('.filter-btn[data-comp]').forEach((btn) => {
         btn.addEventListener('click', () => {
-          document.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
+          document.querySelectorAll('.filter-btn[data-comp]').forEach((b) => b.classList.remove('active'));
           btn.classList.add('active');
           appState.activeCompetition = btn.getAttribute('data-comp') || 'Toate';
           const todayIso = localIsoDate();
           const filtered = getFilteredMatches();
-          appState.selectedMatch = filtered.find((m) => m.date >= todayIso) || filtered[0] || null;
+          appState.selectedMatch = filtered.find((m) => m.date >= todayIso) || filtered[filtered.length - 1] || null;
           renderCalendar();
         });
       });
 
+      document.querySelectorAll('.filter-btn[data-res-comp]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-btn[data-res-comp]').forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          appState.resultsCompetition = btn.getAttribute('data-res-comp') || 'Toate';
+          appState.showAllResults = false;
+          renderResultsSection();
+        });
+      });
+
       const modal = document.getElementById('config-modal');
+      const summaryModal = document.getElementById('match-summary-modal');
       const openModal = () => modal.classList.add('open');
       const closeModal = () => modal.classList.remove('open');
+      const closeSummary = () => summaryModal.classList.remove('open');
+
       ['btn-open-guide', 'btn-status-pill', 'dock-open-guide'].forEach((id) =>
         document.getElementById(id).addEventListener('click', openModal)
       );
       document.getElementById('btn-close-modal').addEventListener('click', closeModal);
+      document.getElementById('btn-close-summary-modal').addEventListener('click', closeSummary);
       modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+      summaryModal.addEventListener('click', (e) => { if (e.target === summaryModal) closeSummary(); });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeModal();
+          closeSummary();
+        }
+      });
+
+      document.getElementById('btn-enable-browser-notif').addEventListener('click', requestBrowserNotifications);
 
       // Dock: evidențiază secțiunea activă
       document.querySelectorAll('.mobile-bottom-bar a.dock-item').forEach((a) => {
@@ -1951,7 +3033,7 @@
           const res = await fetch(`https://ntfy.sh/${encodeURIComponent(topic)}`, {
             method: 'POST',
             headers: { Title: 'Corona Ice Tracker - Test', Priority: 'high', Tags: 'ice_hockey,ticket', Click: EVENTIM_ARTIST_URL },
-            body: 'Alertele pentru meciurile de hochei CSM Corona Brașov funcționează!'
+            body: 'Alertele pentru bilete și goluri CSM Corona Brașov funcționează!'
           });
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
           fb.style.color = '#34d399';

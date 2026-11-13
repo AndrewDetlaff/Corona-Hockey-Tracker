@@ -1,0 +1,75 @@
+name: "Corona Ice Tracker - Live Match Watcher"
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_minutes:
+        description: "Durata maximă de monitorizare live (minute)"
+        required: false
+        default: "180"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: corona-live-match
+  cancel-in-progress: true
+
+jobs:
+  live-watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 190
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Configurare Git
+        run: |
+          git config user.name "Corona Ice Tracker Bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Monitorizare Live (goluri, scor, evenimente la 30s)
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          NTFY_SERVER: ${{ secrets.NTFY_SERVER }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TZ: "Europe/Bucharest"
+          MAX_MINUTES: "${{ github.event.inputs.max_minutes || '180' }}"
+        run: |
+          END_TS=$(( $(date +%s) + MAX_MINUTES * 60 ))
+          SAW_LIVE=0
+          while [ $(date +%s) -lt $END_TS ]; do
+            node scripts/monitor.js --watch-tick || true
+            git add data/matches.json
+            if ! git diff --staged --quiet; then
+              git commit -m "Live update ($(date +'%H:%M:%S'))"
+              git pull --rebase --autostash || true
+              git push || true
+            fi
+            STATUS=$(node -e '
+              const fs = require("fs");
+              const d = JSON.parse(fs.readFileSync("data/matches.json", "utf8"));
+              const today = new Date().toLocaleDateString("en-CA", { timeZone: "Europe/Bucharest" });
+              if (d.activeMatch) console.log("LIVE");
+              else if ((d.matches || []).some(m => m.date === today && m.matchState === "scheduled")) console.log("TODAY");
+              else console.log("NONE");
+            ')
+            echo "Status curent: $STATUS"
+            if [ "$STATUS" = "LIVE" ]; then
+              SAW_LIVE=1
+            elif [ "$SAW_LIVE" = "1" ]; then
+              echo "Meciul activ s-a încheiat. Opresc watch-ul."
+              break
+            elif [ "$STATUS" = "NONE" ]; then
+              echo "Niciun meci activ sau programat azi. Opresc watch-ul."
+              break
+            fi
+            sleep 30
+          done

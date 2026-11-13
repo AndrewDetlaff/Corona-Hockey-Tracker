@@ -5,6 +5,7 @@
   "main": "scripts/monitor.js",
   "scripts": {
     "monitor": "node scripts/monitor.js",
+    "watch": "node scripts/monitor.js --watch",
     "start": "npx serve ."
   },
   "keywords": [
