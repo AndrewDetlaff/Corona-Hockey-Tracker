@@ -73,17 +73,13 @@
       position: relative;
     }
 
-    /* Marcaje subtile de patinoar pe fundal */
+    /* Lumină subtilă de arenă */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
       pointer-events: none;
-      background-image:
-        linear-gradient(90deg, rgba(56, 189, 248, 0.04) 1px, transparent 1px),
-        linear-gradient(0deg, rgba(56, 189, 248, 0.04) 1px, transparent 1px);
-      background-size: 48px 48px;
-      mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.65) 20%, transparent 80%);
+      background: radial-gradient(ellipse 80% 40% at 50% 0%, rgba(0, 85, 165, 0.18) 0%, transparent 70%);
       z-index: 0;
     }
 
@@ -104,17 +100,15 @@
       padding: 0 16px;
     }
 
-    /* Efect Glassmorphism "Gheață Translucidă" */
+    /* Carduri curate cu contrast ridicat */
     .ice-card {
-      background: var(--ice-glass);
-      backdrop-filter: blur(20px) saturate(160%);
-      -webkit-backdrop-filter: blur(20px) saturate(160%);
-      border: 1px solid var(--ice-border);
-      border-radius: 22px;
-      box-shadow:
-        0 18px 40px -15px rgba(0, 0, 0, 0.65),
-        inset 0 1px 1px rgba(255, 255, 255, 0.14);
-      transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+      background: rgba(9, 22, 42, 0.86);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(148, 210, 255, 0.12);
+      border-radius: 18px;
+      box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.6);
+      transition: transform 0.2s ease, border-color 0.2s ease;
     }
 
     /* Header & Top Status Bar */
@@ -135,29 +129,25 @@
     }
 
     .brand-crest {
-      width: 48px;
-      height: 48px;
-      border-radius: 15px;
-      background: linear-gradient(135deg, #00478f 0%, #002b5c 100%);
-      border: 2px solid var(--corona-gold);
-      box-shadow: 0 0 18px var(--corona-gold-glow);
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #0055a5 0%, #002b5c 100%);
+      border: 1.5px solid rgba(250, 204, 21, 0.65);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 25px;
       flex-shrink: 0;
     }
 
     .brand-title {
       font-family: 'Rajdhani', sans-serif;
-      font-size: 1.5rem;
+      font-size: 1.38rem;
       font-weight: 800;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.5px;
       text-transform: uppercase;
       line-height: 1.05;
-      background: linear-gradient(90deg, #ffffff 0%, #bae6fd 55%, #facc15 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #f8fafc;
     }
 
     .brand-subtitle {
@@ -226,31 +216,17 @@
       transform: translateY(-1px);
     }
 
-    /* HERO CARD — Următorul Meci la Patinoarul Olimpic */
+    /* HERO CARD — Următorul Meci */
     .hero-card {
       position: relative;
       overflow: hidden;
-      padding: 26px 24px;
-      margin-bottom: 24px;
-      border: 1px solid rgba(250, 204, 21, 0.42);
+      padding: 24px 22px;
+      margin-bottom: 22px;
+      border: 1px solid rgba(56, 189, 248, 0.24);
       background:
-        radial-gradient(circle at 90% 15%, rgba(250, 204, 21, 0.2) 0%, transparent 48%),
-        radial-gradient(circle at 10% 85%, rgba(0, 119, 255, 0.28) 0%, transparent 55%),
-        linear-gradient(135deg, rgba(9, 28, 56, 0.9) 0%, rgba(6, 19, 39, 0.92) 100%);
-    }
-
-    .hero-card::after {
-      content: 'PATINOARUL OLIMPIC BRAȘOV';
-      position: absolute;
-      right: -15px;
-      bottom: -18px;
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 3.4rem;
-      font-weight: 800;
-      color: rgba(255, 255, 255, 0.03);
-      pointer-events: none;
-      user-select: none;
-      letter-spacing: 2px;
+        radial-gradient(circle at 92% 10%, rgba(250, 204, 21, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 8% 90%, rgba(0, 85, 165, 0.26) 0%, transparent 55%),
+        linear-gradient(145deg, rgba(10, 26, 52, 0.94) 0%, rgba(6, 17, 34, 0.96) 100%);
     }
 
     .hero-top-row {
@@ -1035,25 +1011,31 @@
       cursor: pointer;
     }
 
-    /* Bottom Dock Bar pentru Mobil */
+    /* Tab Bar Nativa pentru Mobil (ascunsă pe desktop) */
     .mobile-bottom-bar {
       position: fixed;
-      bottom: calc(var(--safe-bottom) + 12px);
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 50;
-      width: calc(100% - 32px);
-      max-width: 460px;
-      padding: 8px;
-      border-radius: 20px;
-      background: rgba(6, 18, 36, 0.88);
-      backdrop-filter: blur(22px);
-      -webkit-backdrop-filter: blur(22px);
-      border: 1px solid rgba(148, 210, 255, 0.22);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.75);
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 60;
+      padding: 6px 8px calc(var(--safe-bottom) + 6px);
+      background: rgba(6, 15, 30, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(148, 210, 255, 0.14);
+      box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.55);
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 4px;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 2px;
+    }
+
+    @media (min-width: 900px) {
+      .mobile-bottom-bar {
+        display: none;
+      }
+      body {
+        padding-bottom: 48px;
+      }
     }
 
     .dock-item {
@@ -1061,26 +1043,46 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 3px;
-      padding: 7px 4px;
-      border-radius: 13px;
-      color: var(--text-secondary);
+      gap: 4px;
+      min-height: 46px;
+      padding: 6px 2px;
+      border-radius: 10px;
+      color: var(--text-muted);
       text-decoration: none;
-      font-size: 0.68rem;
+      font-size: 0.66rem;
       font-weight: 600;
+      letter-spacing: 0.2px;
       border: none;
       background: transparent;
       cursor: pointer;
+      transition: color 0.18s ease, background 0.18s ease;
     }
 
-    .dock-item.active,
-    .dock-item:hover {
-      background: rgba(0, 85, 165, 0.4);
+    .dock-item.active {
       color: var(--corona-gold);
+      background: rgba(250, 204, 21, 0.08);
+    }
+
+    .dock-item:active {
+      transform: scale(0.96);
     }
 
     .dock-icon {
-      font-size: 1.1rem;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .dock-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
     /* Bannere de stare a datelor & verificare sursă */
@@ -1575,6 +1577,168 @@
       grid-template-columns: repeat(5, 1fr);
     }
 
+    /* ================================================================
+       INTRO & LOADING SCREEN (HOCKEY SVG)
+       ================================================================ */
+    #ice-intro-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background:
+        radial-gradient(circle at 50% 38%, rgba(0, 85, 165, 0.42) 0%, transparent 55%),
+        radial-gradient(circle at 50% 62%, rgba(250, 204, 21, 0.14) 0%, transparent 48%),
+        linear-gradient(180deg, #030914 0%, #061428 50%, #030914 100%);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      transition: opacity 0.48s cubic-bezier(0.22, 1, 0.36, 1), transform 0.48s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    #ice-intro-overlay.hide {
+      opacity: 0;
+      transform: scale(1.04);
+      pointer-events: none;
+    }
+
+    .intro-rink-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.22;
+    }
+
+    .intro-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      max-width: 360px;
+      width: 100%;
+      animation: introPopIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes introPopIn {
+      from { opacity: 0; transform: translateY(14px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .intro-svg-wrap {
+      width: 168px;
+      height: 168px;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 14px 32px rgba(0, 85, 165, 0.55));
+    }
+
+    .intro-ring-spin {
+      transform-origin: 100px 100px;
+      animation: introSpinSlow 14s linear infinite;
+    }
+
+    .intro-puck-pulse {
+      transform-origin: 100px 124px;
+      animation: puckBounce 1.8s ease-in-out infinite;
+    }
+
+    @keyframes introSpinSlow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes puckBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .intro-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 2.05rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      line-height: 1.05;
+      background: linear-gradient(90deg, #ffffff 0%, #bae6fd 50%, #facc15 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .intro-sub {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      letter-spacing: 0.4px;
+      margin-bottom: 24px;
+    }
+
+    .intro-loader-box {
+      width: 100%;
+      max-width: 270px;
+    }
+
+    .intro-progress-track {
+      width: 100%;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(148, 210, 255, 0.14);
+      overflow: hidden;
+      margin-bottom: 10px;
+      border: 1px solid rgba(148, 210, 255, 0.18);
+    }
+
+    .intro-progress-fill {
+      height: 100%;
+      width: 20%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #0066cc 0%, #38bdf8 55%, #facc15 100%);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.7);
+      transition: width 0.35s ease;
+    }
+
+    .intro-status-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: #bae6fd;
+      min-height: 20px;
+    }
+
+    .intro-skip-btn {
+      margin-top: 22px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(148, 210, 255, 0.08);
+      border: 1px solid rgba(148, 210, 255, 0.2);
+      color: var(--text-secondary);
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s;
+    }
+
+    .intro-skip-btn:hover {
+      background: rgba(148, 210, 255, 0.18);
+      color: #ffffff;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .intro-ring-spin,
+      .intro-puck-pulse,
+      .intro-content {
+        animation: none !important;
+      }
+    }
+
     /* Responsive Mobile */
     @media (max-width: 860px) {
       .main-grid {
@@ -1588,27 +1752,75 @@
       }
     }
 
+    @media (max-width: 640px) {
+      .top-header {
+        padding: 12px 14px;
+        gap: 10px;
+      }
+      .header-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .filter-btn {
+        min-height: 38px;
+        padding: 8px 13px;
+      }
+      .cal-arrow,
+      .btn-close-modal {
+        width: 40px;
+        height: 40px;
+      }
+      .ntfy-input {
+        font-size: 16px;
+      }
+      /* Bottom-sheet modals pe mobil */
+      .modal-backdrop {
+        align-items: flex-end;
+        padding: 0;
+      }
+      .modal-card {
+        border-radius: 22px 22px 0 0;
+        max-height: 88vh;
+        padding: 18px 16px calc(22px + var(--safe-bottom));
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+      }
+      .modal-card::before {
+        content: '';
+        display: block;
+        width: 38px;
+        height: 4px;
+        border-radius: 999px;
+        background: rgba(148, 210, 255, 0.28);
+        margin: 0 auto 14px;
+      }
+    }
+
     @media (max-width: 440px) {
       .app-container {
         padding: 0 12px;
       }
       .hero-card {
-        padding: 18px 15px;
+        padding: 18px 14px;
       }
       .hero-matchup {
-        padding: 13px 10px;
+        padding: 14px 10px;
         gap: 8px;
       }
       .team-avatar {
-        width: 50px;
-        height: 50px;
-        font-size: 1.15rem;
+        width: 48px;
+        height: 48px;
+        font-size: 1.1rem;
       }
       .team-name {
-        font-size: 1.02rem;
+        font-size: 0.98rem;
+      }
+      .score-big {
+        font-size: 2.2rem;
       }
       .day-cell {
-        min-height: 54px;
+        min-height: 52px;
         padding: 4px 3px;
       }
       .section-card {
@@ -1618,6 +1830,101 @@
   </style>
 </head>
 <body>
+  <!-- INTRO & SHORT LOADING SCREEN (HOCKEY SVG) -->
+  <div id="ice-intro-overlay" role="status" aria-live="polite" aria-label="Se încarcă Corona Ice Tracker">
+    <!-- Subtle Ice Rink Center Circle SVG Background -->
+    <svg class="intro-rink-bg" viewBox="0 0 800 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <line x1="400" y1="0" x2="400" y2="800" stroke="#ef4444" stroke-width="4" stroke-dasharray="14 10" />
+      <line x1="160" y1="0" x2="160" y2="800" stroke="#38bdf8" stroke-width="5" />
+      <line x1="640" y1="0" x2="640" y2="800" stroke="#38bdf8" stroke-width="5" />
+      <circle cx="400" cy="400" r="145" fill="none" stroke="#38bdf8" stroke-width="3" />
+      <circle cx="400" cy="400" r="14" fill="#38bdf8" />
+    </svg>
+
+    <div class="intro-content">
+      <!-- Custom Hockey Emblem SVG -->
+      <div class="intro-svg-wrap">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#0b3b7a" />
+              <stop offset="55%" stop-color="#06224a" />
+              <stop offset="100%" stop-color="#031229" />
+            </linearGradient>
+            <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#fde047" />
+              <stop offset="50%" stop-color="#facc15" />
+              <stop offset="100%" stop-color="#ca8a04" />
+            </linearGradient>
+            <linearGradient id="iceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#e0f2fe" />
+              <stop offset="100%" stop-color="#38bdf8" />
+            </linearGradient>
+            <linearGradient id="puckGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#334155" />
+              <stop offset="50%" stop-color="#0f172a" />
+              <stop offset="100%" stop-color="#020617" />
+            </linearGradient>
+          </defs>
+
+          <!-- Outer dashed ice ring -->
+          <circle class="intro-ring-spin" cx="100" cy="100" r="90" fill="none" stroke="#38bdf8" stroke-width="1.6" stroke-dasharray="10 8" opacity="0.45" />
+          <circle cx="100" cy="100" r="81" fill="url(#shieldGrad)" stroke="url(#goldGrad)" stroke-width="3.5" />
+          <circle cx="100" cy="100" r="73" fill="none" stroke="rgba(186,230,253,0.22)" stroke-width="1.2" />
+
+          <!-- Subtle Ice Crystal / Crown accent at top -->
+          <path d="M84 44 L92 33 L100 41 L108 33 L116 44 L112 50 L88 50 Z" fill="url(#goldGrad)" />
+
+          <!-- Left Hockey Stick -->
+          <g stroke-linecap="round" stroke-linejoin="round">
+            <path d="M52 54 L128 134 C133 139 144 140 151 135 C154 133 153 128 148 128 L135 129 L62 49 Z" fill="url(#iceGrad)" stroke="#0f172a" stroke-width="1.5" />
+            <!-- Stick tape bands -->
+            <path d="M135 129 L146 128 L143 137 L132 136 Z" fill="#facc15" opacity="0.9" />
+          </g>
+
+          <!-- Right Hockey Stick -->
+          <g stroke-linecap="round" stroke-linejoin="round">
+            <path d="M148 54 L72 134 C67 139 56 140 49 135 C46 133 47 128 52 128 L65 129 L138 49 Z" fill="#ffffff" stroke="#0f172a" stroke-width="1.5" />
+            <!-- Stick tape bands -->
+            <path d="M65 129 L54 128 L57 137 L68 136 Z" fill="#38bdf8" opacity="0.95" />
+          </g>
+
+          <!-- Ice spray sparks -->
+          <g fill="#bae6fd" opacity="0.85">
+            <circle cx="64" cy="146" r="2.2" />
+            <circle cx="136" cy="146" r="2.2" />
+            <circle cx="75" cy="152" r="1.5" />
+            <circle cx="125" cy="152" r="1.5" />
+            <path d="M100 148 L102 153 L107 155 L102 157 L100 162 L98 157 L93 155 L98 153 Z" fill="#facc15" />
+          </g>
+
+          <!-- 3D Hockey Puck -->
+          <g class="intro-puck-pulse">
+            <ellipse cx="100" cy="133" rx="22" ry="8" fill="rgba(0,0,0,0.5)" />
+            <path d="M79 120 L79 130 C79 134.5 88.4 138 100 138 C111.6 138 121 134.5 121 130 L121 120 Z" fill="url(#puckGrad)" stroke="#38bdf8" stroke-width="1.2" />
+            <ellipse cx="100" cy="120" rx="21" ry="7.5" fill="#1e293b" stroke="#94a3b8" stroke-width="1.2" />
+            <ellipse cx="95" cy="119" rx="10" ry="3" fill="rgba(255,255,255,0.18)" />
+          </g>
+        </svg>
+      </div>
+
+      <h2 class="intro-title">Corona Ice Tracker</h2>
+      <p class="intro-sub">CSM Corona Brașov • Patinoarul Olimpic</p>
+
+      <div class="intro-loader-box">
+        <div class="intro-progress-track">
+          <div class="intro-progress-fill" id="intro-progress-fill"></div>
+        </div>
+        <div class="intro-status-row" id="intro-status-text">
+          <span class="pulse-dot"></span>
+          <span>Se verifică datele de la bot…</span>
+        </div>
+      </div>
+
+      <button type="button" class="intro-skip-btn" id="intro-skip-btn">Sari peste →</button>
+    </div>
+  </div>
+
   <!-- Fulgi de gheață & scântei pe patinoar -->
   <canvas id="ice-canvas" aria-hidden="true"></canvas>
 
@@ -1625,7 +1932,13 @@
     <!-- TOP BAR -->
     <header class="ice-card top-header">
       <div class="brand-wrap">
-        <div class="brand-crest">🏒</div>
+        <div class="brand-crest" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 4l10 13a3 3 0 0 0 4 1l1-1" />
+            <path d="M19 4L9 17a3 3 0 0 1-4 1l-1-1" />
+            <ellipse cx="12" cy="19" rx="3" ry="1.3" fill="#facc15" stroke="none" />
+          </svg>
+        </div>
         <div>
           <h1 class="brand-title">Corona Ice Tracker</h1>
           <div class="brand-subtitle">
@@ -1640,7 +1953,11 @@
           <span id="last-checked-text">Verificat recent</span>
         </button>
         <button type="button" class="btn-config" id="btn-open-guide">
-          <span>📲 Alerte & Instalare</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+          <span>Alerte &amp; Instalare</span>
         </button>
       </div>
     </header>
@@ -1666,7 +1983,10 @@
     <!-- b) SUMAR MECIURI TRECUTE & REZULTATE RECENTE -->
     <section class="ice-card section-card results-section" id="sec-results">
       <div class="section-header">
-        <h2 class="section-title">📊 Rezultate & Sumar Meciuri</h2>
+        <h2 class="section-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+          Rezultate &amp; Sumar Meciuri
+        </h2>
         <span style="font-size: 0.75rem; color: var(--text-secondary);">Click pe un meci pentru rezumat complet</span>
       </div>
       <div class="filter-pills" id="results-filter-pills" role="tablist" aria-label="Filtru rezultate">
@@ -1685,7 +2005,10 @@
       <!-- c) CALENDARUL SEZONULUI -->
       <section class="ice-card section-card" id="sec-calendar">
         <div class="section-header">
-          <h2 class="section-title">📅 Calendarul Sezonului</h2>
+          <h2 class="section-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Calendarul Sezonului
+          </h2>
           <span style="font-size: 0.75rem; color: var(--text-secondary);">Click pe o zi marcată</span>
         </div>
 
@@ -1729,7 +2052,10 @@
       <!-- d) RADARUL DE ANUNȚURI & ȘTIRI BILETE -->
       <section class="ice-card section-card" id="sec-radar">
         <div class="section-header">
-          <h2 class="section-title">📡 Radar Știri & Bilete</h2>
+          <h2 class="section-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9C23 8.8 23 15.2 19.1 19.1"/></svg>
+            Radar Știri &amp; Bilete
+          </h2>
           <a
             href="https://www.coronabrasov.ro"
             target="_blank"
@@ -1831,26 +2157,36 @@
     </div>
   </div>
 
-  <!-- BOTTOM DOCK BAR PENTRU MOBIL -->
+  <!-- TAB BAR MOBIL (SVG ICONS) -->
   <nav class="mobile-bottom-bar" aria-label="Navigare rapidă">
-    <a href="#sec-hero" class="dock-item active" id="dock-home-link">
-      <span class="dock-icon">🏒</span>
+    <a href="#sec-hero" class="dock-item active" id="dock-home-link" data-section="sec-hero">
+      <span class="dock-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+      </span>
       <span>Meci</span>
     </a>
-    <a href="#sec-results" class="dock-item">
-      <span class="dock-icon">📊</span>
+    <a href="#sec-results" class="dock-item" data-section="sec-results">
+      <span class="dock-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+      </span>
       <span>Rezultate</span>
     </a>
-    <a href="#sec-calendar" class="dock-item">
-      <span class="dock-icon">📅</span>
+    <a href="#sec-calendar" class="dock-item" data-section="sec-calendar">
+      <span class="dock-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </span>
       <span>Calendar</span>
     </a>
-    <a href="#sec-radar" class="dock-item">
-      <span class="dock-icon">📡</span>
+    <a href="#sec-radar" class="dock-item" data-section="sec-radar">
+      <span class="dock-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+      </span>
       <span>Știri</span>
     </a>
     <button type="button" class="dock-item" id="dock-open-guide">
-      <span class="dock-icon">📲</span>
+      <span class="dock-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </span>
       <span>Alerte</span>
     </button>
   </nav>
@@ -2951,6 +3287,54 @@
       renderNewsRadar();
       updateBrowserNotifStatus();
       if (!isRefresh || Boolean(appState.data.activeMatch)) scheduleAutoRefresh();
+      if (!isRefresh) finishIntroLoading();
+    }
+
+    // ------------------------------------------------------------------ intro & loading screen
+    const introStartAt = Date.now();
+    let introDismissed = false;
+
+    function dismissIntroOverlay() {
+      if (introDismissed) return;
+      introDismissed = true;
+      const overlay = document.getElementById('ice-intro-overlay');
+      if (!overlay) return;
+      overlay.classList.add('hide');
+      setTimeout(() => overlay.remove(), 520);
+    }
+
+    function finishIntroLoading() {
+      const fill = document.getElementById('intro-progress-fill');
+      const status = document.getElementById('intro-status-text');
+      if (fill) fill.style.width = '100%';
+      if (status) {
+        const count = (appState.data.matches || []).length;
+        const text = appState.loadError
+          ? 'Pregătit (verifică conexiunea)'
+          : appState.data.activeMatch
+          ? '🔴 Meci LIVE detectat!'
+          : count > 0
+          ? `✔ ${count} meciuri și știri încărcate`
+          : '✔ Date sincronizate!';
+        status.innerHTML = `<span>${esc(text)}</span>`;
+      }
+      const elapsed = Date.now() - introStartAt;
+      const minDisplayMs = 1050;
+      const remaining = Math.max(220, minDisplayMs - elapsed);
+      setTimeout(dismissIntroOverlay, remaining);
+    }
+
+    function initIntroOverlay() {
+      const fill = document.getElementById('intro-progress-fill');
+      const skipBtn = document.getElementById('intro-skip-btn');
+      if (fill) {
+        requestAnimationFrame(() => { fill.style.width = '68%'; });
+      }
+      if (skipBtn) {
+        skipBtn.addEventListener('click', dismissIntroOverlay);
+      }
+      // Safety fallback in case a slow network stalls
+      setTimeout(dismissIntroOverlay, 6000);
     }
 
     // ------------------------------------------------------------------ evenimente
@@ -3010,13 +3394,34 @@
 
       document.getElementById('btn-enable-browser-notif').addEventListener('click', requestBrowserNotifications);
 
-      // Dock: evidențiază secțiunea activă
-      document.querySelectorAll('.mobile-bottom-bar a.dock-item').forEach((a) => {
+      // Dock: evidențiază secțiunea activă la click și la scroll
+      const dockLinks = Array.from(document.querySelectorAll('.mobile-bottom-bar a.dock-item'));
+      dockLinks.forEach((a) => {
         a.addEventListener('click', () => {
           document.querySelectorAll('.dock-item').forEach((d) => d.classList.remove('active'));
           a.classList.add('active');
         });
       });
+
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+            if (!visible) return;
+            const id = visible.target.id;
+            const match = dockLinks.find((a) => a.getAttribute('data-section') === id);
+            if (match) {
+              document.querySelectorAll('.dock-item').forEach((d) => d.classList.remove('active'));
+              match.classList.add('active');
+            }
+          },
+          { rootMargin: '-25% 0px -55% 0px', threshold: [0.1, 0.4] }
+        );
+        ['sec-hero', 'sec-results', 'sec-calendar', 'sec-radar'].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) observer.observe(el);
+        });
+      }
 
       // Test ntfy.sh din interfață
       document.getElementById('btn-send-ntfy-test').addEventListener('click', async () => {
@@ -3077,6 +3482,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+      initIntroOverlay();
       initEvents();
       initIceParticles();
       loadMatchesData();
