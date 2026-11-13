@@ -1,5 +1,5 @@
 {
-  "lastChecked": "2026-11-13T11:39:45.837Z",
+  "lastChecked": "2026-11-13T11:40:30.685Z",
   "sources": {
     "coronabrasov": {
       "url": "https://www.coronabrasov.ro",
@@ -269,677 +269,25 @@
       "frhg-https-icehockey-ro-game-2143-event-49-season-4-gk-3-60:00-0"
     ],
     "matchPhaseStates": {
-      "frhg-2074": "live:25:1",
-      "frhg-2078": "live:0:11",
-      "frhg-2082": "live:5:3",
-      "frhg-2103": "live:2:0",
-      "frhg-2106": "live:2:3",
+      "frhg-2074": "finished:25:1",
+      "frhg-2078": "finished:0:11",
+      "frhg-2082": "finished:5:3",
+      "frhg-2103": "finished:2:0",
+      "frhg-2106": "finished:2:3",
       "el-undefined": "scheduled",
-      "frhg-2088": "live:6:1",
-      "frhg-2102": "live:0:3",
-      "frhg-2126": "live:11:0",
-      "frhg-2132": "live:0:11",
-      "frhg-2141": "live:6:3",
-      "frhg-2143": "live:6:1",
+      "frhg-2088": "finished:6:1",
+      "frhg-2102": "finished:0:3",
+      "frhg-2126": "finished:11:0",
+      "frhg-2132": "finished:0:11",
+      "frhg-2141": "finished:6:3",
+      "frhg-2143": "finished:6:1",
       "corona-2026-11-13-sport-club-csikszereda": "scheduled",
       "corona-2026-11-15-gyergyoi-hoki-klub": "scheduled",
       "frhg-2026-11-24-acs-sapientia-u23-csm-corona-brasov": "scheduled",
       "frhg-2026-12-06-csa-steaua-bucuresti-csm-corona-brasov": "scheduled"
     }
   },
-  "activeMatch": {
-    "id": "frhg-2074",
-    "gameNo": "CRM 2",
-    "title": "CSM Corona Brasov – Sportul Studentesc",
-    "homeTeam": "CSM Corona Brasov",
-    "awayTeam": "Sportul Studentesc",
-    "opponent": "Sportul Studentesc",
-    "isHome": true,
-    "competition": "Cupa României",
-    "date": "2026-09-04",
-    "time": "19:00",
-    "location": "Pat. Olimpic Brasov",
-    "startingPrice": null,
-    "status": "LIVE",
-    "matchState": "live",
-    "homeScore": 25,
-    "awayScore": 1,
-    "periodScores": {
-      "p1": "5:0",
-      "p2": "12:0",
-      "p3": "8:1",
-      "ot": null,
-      "so": null
-    },
-    "isOvertime": false,
-    "isShootout": false,
-    "liveInfo": {
-      "periodLabel": "Repriza 3",
-      "clock": "60:00",
-      "statusText": "Game Completed"
-    },
-    "stats": {
-      "sogHome": 88,
-      "sogAway": 12,
-      "sogByPeriod": {
-        "p1": "29:6",
-        "p2": "30:2",
-        "p3": "29:4"
-      },
-      "pimHome": 0,
-      "pimAway": 6,
-      "ppHome": null,
-      "ppAway": null,
-      "attendance": null
-    },
-    "events": [
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-gk-1-00:00-34",
-        "type": "goalie",
-        "period": "Repriza 1",
-        "time": "00:00",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#30 TOKE Zoltan Laszlo - In",
-        "label": "Schimbare portar"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-gk-1-00:00-33",
-        "type": "goalie",
-        "period": "Repriza 1",
-        "time": "00:00",
-        "team": "away",
-        "teamName": "Sportul Studentesc",
-        "isCorona": false,
-        "player": "#45 AGAPIE Nicola Cosmin - In",
-        "label": "Schimbare portar"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-1-00:55-72-rokaly-boldizsar-richard",
-        "type": "goal",
-        "period": "Repriza 1",
-        "time": "00:55",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#72 ROKALY BOLDIZSAR Richard",
-        "assists": [],
-        "score": "1:0",
-        "flags": [],
-        "label": "Gol 1:0"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-1-04:41-58-wardley-evan-kenneth",
-        "type": "goal",
-        "period": "Repriza 1",
-        "time": "04:41",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#58 WARDLEY Evan Kenneth",
-        "assists": [
-          "#77",
-          "VASILE",
-          "Andrei"
-        ],
-        "score": "2:0",
-        "flags": [],
-        "label": "Gol 2:0"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-1-12:04-77-vasile-andrei",
-        "type": "goal",
-        "period": "Repriza 1",
-        "time": "12:04",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#77 VASILE Andrei",
-        "assists": [
-          "#55",
-          "DMYTRO",
-          "Rudyka"
-        ],
-        "score": "3:0",
-        "flags": [],
-        "label": "Gol 3:0"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-1-16:10-77-vasile-andrei",
-        "type": "goal",
-        "period": "Repriza 1",
-        "time": "16:10",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#77 VASILE Andrei",
-        "assists": [],
-        "score": "4:0",
-        "flags": [],
-        "label": "Gol 4:0"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-1-18:41-98-gajdo-balazs",
-        "type": "goal",
-        "period": "Repriza 1",
-        "time": "18:41",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#98 GAJDO Balazs",
-        "assists": [
-          "#20",
-          "CSISZER",
-          "Csaba"
-        ],
-        "score": "5:0",
-        "flags": [],
-        "label": "Gol 5:0"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-p-1-19:36-6-kiss-nandor-27",
-        "type": "penalty",
-        "period": "Repriza 1",
-        "time": "19:36",
-        "team": "away",
-        "teamName": "Sportul Studentesc",
-        "isCorona": false,
-        "player": "#6 KISS Nandor",
-        "minutes": 2,
-        "cause": "Tripping",
-        "isMajor": false,
-        "label": "Eliminare 2 min (Tripping)"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-2-22:36-18-gajdo-tamas",
-        "type": "goal",
-        "period": "Repriza 2",
-        "time": "22:36",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#18 GAJDO Tamas",
-        "assists": [
-          "#98",
-          "GAJDO",
-          "Balazs"
-        ],
-        "score": "6:0",
-        "flags": [],
-        "label": "Gol 6:0"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-2-23:18-11-vasile-nicolae-rares",
-        "type": "goal",
-        "period": "Repriza 2",
-        "time": "23:18",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#11 VASILE Nicolae Rares",
-        "assists": [
-          "#20",
-          "CSISZER",
-          "Csaba"
-        ],
-        "score": "7:0",
-        "flags": [],
-        "label": "Gol 7:0"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-2-24:48-55-dmytro-rudyka",
-        "type": "goal",
-        "period": "Repriza 2",
-        "time": "24:48",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#55 DMYTRO Rudyka",
-        "assists": [
-          "#98",
-          "GAJDO",
-          "Balazs",
-          "#21",
-          "KOGER",
-          "Daniel Istvan"
-        ],
-        "score": "8:0",
-        "flags": [],
-        "label": "Gol 8:0"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-2-26:45-55-dmytro-rudyka",
-        "type": "goal",
-        "period": "Repriza 2",
-        "time": "26:45",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#55 DMYTRO Rudyka",
-        "assists": [
-          "#50",
-          "ZAMFIR",
-          "Andrei"
-        ],
-        "score": "9:0",
-        "flags": [],
-        "label": "Gol 9:0"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-gk-2-27:20-22",
-        "type": "goalie",
-        "period": "Repriza 2",
-        "time": "27:20",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#29 MARDALE Calin Ionut - In",
-        "label": "Schimbare portar"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-2-28:20-72-rokaly-boldizsar-richard",
-        "type": "goal",
-        "period": "Repriza 2",
-        "time": "28:20",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#72 ROKALY BOLDIZSAR Richard",
-        "assists": [
-          "#58",
-          "WARDLEY",
-          "Evan Kenneth"
-        ],
-        "score": "10:0",
-        "flags": [],
-        "label": "Gol 10:0"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-2-29:03-81-gabrian-matei",
-        "type": "goal",
-        "period": "Repriza 2",
-        "time": "29:03",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#81 GABRIAN Matei",
-        "assists": [
-          "#11",
-          "VASILE",
-          "Nicolae Rares",
-          "#36",
-          "GRIGORESCU",
-          "Andrei"
-        ],
-        "score": "11:0",
-        "flags": [],
-        "label": "Gol 11:0"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-gk-2-29:05-19",
-        "type": "goalie",
-        "period": "Repriza 2",
-        "time": "29:05",
-        "team": "away",
-        "teamName": "Sportul Studentesc",
-        "isCorona": false,
-        "player": "#39 MORARU Alexandru Nicolae - In",
-        "label": "Schimbare portar"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-2-30:46-72-rokaly-boldizsar-richard",
-        "type": "goal",
-        "period": "Repriza 2",
-        "time": "30:46",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#72 ROKALY BOLDIZSAR Richard",
-        "assists": [
-          "#98",
-          "GAJDO",
-          "Balazs"
-        ],
-        "score": "12:0",
-        "flags": [],
-        "label": "Gol 12:0"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-2-31:25-18-gajdo-tamas",
-        "type": "goal",
-        "period": "Repriza 2",
-        "time": "31:25",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#18 GAJDO Tamas",
-        "assists": [
-          "#98",
-          "GAJDO",
-          "Balazs"
-        ],
-        "score": "13:0",
-        "flags": [],
-        "label": "Gol 13:0"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-2-32:13-11-vasile-nicolae-rares",
-        "type": "goal",
-        "period": "Repriza 2",
-        "time": "32:13",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#11 VASILE Nicolae Rares",
-        "assists": [
-          "#77",
-          "VASILE",
-          "Andrei",
-          "#81",
-          "GABRIAN",
-          "Matei"
-        ],
-        "score": "14:0",
-        "flags": [],
-        "label": "Gol 14:0"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-2-32:25-55-dmytro-rudyka",
-        "type": "goal",
-        "period": "Repriza 2",
-        "time": "32:25",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#55 DMYTRO Rudyka",
-        "assists": [],
-        "score": "15:0",
-        "flags": [],
-        "label": "Gol 15:0"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-2-34:02-21-koger-daniel-istvan",
-        "type": "goal",
-        "period": "Repriza 2",
-        "time": "34:02",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#21 KOGER Daniel Istvan",
-        "assists": [
-          "#58",
-          "WARDLEY",
-          "Evan Kenneth"
-        ],
-        "score": "16:0",
-        "flags": [],
-        "label": "Gol 16:0"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-2-36:04-7-mathe-zsolt",
-        "type": "goal",
-        "period": "Repriza 2",
-        "time": "36:04",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#7 MATHE Zsolt",
-        "assists": [
-          "#8",
-          "KOVACS",
-          "Elod"
-        ],
-        "score": "17:0",
-        "flags": [],
-        "label": "Gol 17:0"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-3-40:38-18-gajdo-tamas",
-        "type": "goal",
-        "period": "Repriza 3",
-        "time": "40:38",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#18 GAJDO Tamas",
-        "assists": [
-          "#72",
-          "ROKALY BOLDIZSAR",
-          "Richard"
-        ],
-        "score": "18:0",
-        "flags": [],
-        "label": "Gol 18:0"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-p-3-41:16-29-radu-costin-nectarie-11",
-        "type": "penalty",
-        "period": "Repriza 3",
-        "time": "41:16",
-        "team": "away",
-        "teamName": "Sportul Studentesc",
-        "isCorona": false,
-        "player": "#29 RADU Costin Nectarie",
-        "minutes": 2,
-        "cause": "Tripping",
-        "isMajor": false,
-        "label": "Eliminare 2 min (Tripping)"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-3-41:34-8-kovacs-elod",
-        "type": "goal",
-        "period": "Repriza 3",
-        "time": "41:34",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#8 KOVACS Elod",
-        "assists": [
-          "#95",
-          "GECSE",
-          "Hugo",
-          "#77",
-          "VASILE",
-          "Andrei"
-        ],
-        "score": "19:0",
-        "flags": [
-          "+1"
-        ],
-        "label": "Gol 19:0"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-3-43:17-58-wardley-evan-kenneth",
-        "type": "goal",
-        "period": "Repriza 3",
-        "time": "43:17",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#58 WARDLEY Evan Kenneth",
-        "assists": [
-          "#72",
-          "ROKALY BOLDIZSAR",
-          "Richard",
-          "#21",
-          "KOGER",
-          "Daniel Istvan"
-        ],
-        "score": "20:0",
-        "flags": [],
-        "label": "Gol 20:0"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-p-3-46:01-tp-8",
-        "type": "penalty",
-        "period": "Repriza 3",
-        "time": "46:01",
-        "team": "away",
-        "teamName": "Sportul Studentesc",
-        "isCorona": false,
-        "player": "TP",
-        "minutes": 2,
-        "cause": "Too many players on the ice",
-        "isMajor": false,
-        "label": "Eliminare 2 min (Too many players on the ice)"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-3-46:22-98-gajdo-balazs",
-        "type": "goal",
-        "period": "Repriza 3",
-        "time": "46:22",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#98 GAJDO Balazs",
-        "assists": [
-          "#58",
-          "WARDLEY",
-          "Evan Kenneth",
-          "#72",
-          "ROKALY BOLDIZSAR",
-          "Richard"
-        ],
-        "score": "21:0",
-        "flags": [
-          "+1"
-        ],
-        "label": "Gol 21:0"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-3-46:56-72-rokaly-boldizsar-richard",
-        "type": "goal",
-        "period": "Repriza 3",
-        "time": "46:56",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#72 ROKALY BOLDIZSAR Richard",
-        "assists": [
-          "#21",
-          "KOGER",
-          "Daniel Istvan",
-          "#98",
-          "GAJDO",
-          "Balazs"
-        ],
-        "score": "22:0",
-        "flags": [],
-        "label": "Gol 22:0"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-3-52:53-77-vasile-andrei",
-        "type": "goal",
-        "period": "Repriza 3",
-        "time": "52:53",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#77 VASILE Andrei",
-        "assists": [
-          "#20",
-          "CSISZER",
-          "Csaba",
-          "#11",
-          "VASILE",
-          "Nicolae Rares"
-        ],
-        "score": "23:0",
-        "flags": [],
-        "label": "Gol 23:0"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-3-57:18-71-sendrea-cezar-george",
-        "type": "goal",
-        "period": "Repriza 3",
-        "time": "57:18",
-        "team": "away",
-        "teamName": "Sportul Studentesc",
-        "isCorona": false,
-        "player": "#71 SENDREA Cezar George",
-        "assists": [
-          "#6",
-          "KISS",
-          "Nandor",
-          "#87",
-          "MARINICA",
-          "Bogdan Valentin"
-        ],
-        "score": "23:1",
-        "flags": [],
-        "label": "Gol 23:1"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-3-59:40-77-vasile-andrei",
-        "type": "goal",
-        "period": "Repriza 3",
-        "time": "59:40",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#77 VASILE Andrei",
-        "assists": [],
-        "score": "24:1",
-        "flags": [],
-        "label": "Gol 24:1"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-g-3-59:54-20-csiszer-csaba",
-        "type": "goal",
-        "period": "Repriza 3",
-        "time": "59:54",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#20 CSISZER Csaba",
-        "assists": [
-          "#55",
-          "DMYTRO",
-          "Rudyka",
-          "#50",
-          "ZAMFIR",
-          "Andrei"
-        ],
-        "score": "25:1",
-        "flags": [],
-        "label": "Gol 25:1"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-gk-3-60:00-1",
-        "type": "goalie",
-        "period": "Repriza 3",
-        "time": "60:00",
-        "team": "home",
-        "teamName": "CSM Corona Brasov",
-        "isCorona": true,
-        "player": "#29 MARDALE Calin Ionut - Out",
-        "label": "Portar scos"
-      },
-      {
-        "id": "frhg-https-icehockey-ro-game-2074-event-50-season-4-gk-3-60:00-0",
-        "type": "goalie",
-        "period": "Repriza 3",
-        "time": "60:00",
-        "team": "away",
-        "teamName": "Sportul Studentesc",
-        "isCorona": false,
-        "player": "#39 MORARU Alexandru Nicolae - Out",
-        "label": "Portar scos"
-      }
-    ],
-    "links": {
-      "gameCenter": "https://icehockey.ro/game/2074/event/50/season/4",
-      "video": null,
-      "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2074_CRM2_2026-09-04.pdf",
-      "lineupPdf": null
-    },
-    "detailsLoaded": true,
-    "ticketUrl": "https://www.eventim.ro/artist/csm-corona-brasov/csm-corona-brasov-hochei-4277387/?affiliate=ROF",
-    "ticketUrlIsDirect": false,
-    "source": "icehockey.ro",
-    "firstSeen": "2026-11-13T11:39:45.837Z"
-  },
+  "activeMatch": null,
   "matches": [
     {
       "id": "frhg-2074",
@@ -954,8 +302,8 @@
       "time": "19:00",
       "location": "Pat. Olimpic Brasov",
       "startingPrice": null,
-      "status": "LIVE",
-      "matchState": "live",
+      "status": "Finalizat",
+      "matchState": "finished",
       "homeScore": 25,
       "awayScore": 1,
       "periodScores": {
@@ -967,11 +315,7 @@
       },
       "isOvertime": false,
       "isShootout": false,
-      "liveInfo": {
-        "periodLabel": "Repriza 3",
-        "clock": "60:00",
-        "statusText": "Game Completed"
-      },
+      "liveInfo": null,
       "stats": {
         "sogHome": 88,
         "sogAway": 12,
@@ -1607,8 +951,8 @@
       "time": "19:00",
       "location": "Pat. Olimpic Brasov",
       "startingPrice": null,
-      "status": "LIVE",
-      "matchState": "live",
+      "status": "Finalizat",
+      "matchState": "finished",
       "homeScore": 0,
       "awayScore": 11,
       "periodScores": {
@@ -1620,11 +964,7 @@
       },
       "isOvertime": false,
       "isShootout": false,
-      "liveInfo": {
-        "periodLabel": "Repriza 3",
-        "clock": "60:00",
-        "statusText": "Game Completed"
-      },
+      "liveInfo": null,
       "stats": {
         "sogHome": 16,
         "sogAway": 43,
@@ -2074,8 +1414,8 @@
       "time": "17:30",
       "location": "Pat. Olimpic Brasov",
       "startingPrice": null,
-      "status": "LIVE",
-      "matchState": "live",
+      "status": "Finalizat",
+      "matchState": "finished",
       "homeScore": 5,
       "awayScore": 3,
       "periodScores": {
@@ -2087,11 +1427,7 @@
       },
       "isOvertime": false,
       "isShootout": false,
-      "liveInfo": {
-        "periodLabel": "Repriza 3",
-        "clock": "60:00",
-        "statusText": "Game Completed"
-      },
+      "liveInfo": null,
       "stats": {
         "sogHome": 54,
         "sogAway": 17,
@@ -2481,8 +1817,8 @@
       "time": "13:00",
       "location": "Pat. Remete Ice Arena",
       "startingPrice": null,
-      "status": "LIVE",
-      "matchState": "live",
+      "status": "Finalizat",
+      "matchState": "finished",
       "homeScore": 2,
       "awayScore": 0,
       "periodScores": {
@@ -2494,11 +1830,7 @@
       },
       "isOvertime": false,
       "isShootout": false,
-      "liveInfo": {
-        "periodLabel": "Repriza 3",
-        "clock": "60:00",
-        "statusText": "Game Completed"
-      },
+      "liveInfo": null,
       "stats": {
         "sogHome": 52,
         "sogAway": 15,
@@ -2852,8 +2184,8 @@
       "time": "17:00",
       "location": "Pat. Remete Ice Arena",
       "startingPrice": null,
-      "status": "LIVE",
-      "matchState": "live",
+      "status": "Finalizat",
+      "matchState": "finished",
       "homeScore": 2,
       "awayScore": 3,
       "periodScores": {
@@ -2865,11 +2197,7 @@
       },
       "isOvertime": true,
       "isShootout": false,
-      "liveInfo": {
-        "periodLabel": "Prelungiri (OT)",
-        "clock": "60:57",
-        "statusText": "Game Completed"
-      },
+      "liveInfo": null,
       "stats": {
         "sogHome": 36,
         "sogAway": 30,
@@ -3175,8 +2503,8 @@
       "time": "17:30",
       "location": "Pat. Olimpic Brasov",
       "startingPrice": null,
-      "status": "LIVE",
-      "matchState": "live",
+      "status": "Finalizat",
+      "matchState": "finished",
       "homeScore": 6,
       "awayScore": 1,
       "periodScores": {
@@ -3188,11 +2516,7 @@
       },
       "isOvertime": false,
       "isShootout": false,
-      "liveInfo": {
-        "periodLabel": "Repriza 3",
-        "clock": "60:00",
-        "statusText": "Game Completed"
-      },
+      "liveInfo": null,
       "stats": {
         "sogHome": 52,
         "sogAway": 25,
@@ -3544,7 +2868,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -3589,7 +2913,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -3634,7 +2958,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -3679,7 +3003,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2094_CNM7_2026-10-02.pdf",
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -3725,7 +3049,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2096_CNM9_2026-10-04.pdf",
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -3748,8 +3072,8 @@
       "time": "18:30",
       "location": "Pat. Galati",
       "startingPrice": null,
-      "status": "LIVE",
-      "matchState": "live",
+      "status": "Finalizat",
+      "matchState": "finished",
       "homeScore": 0,
       "awayScore": 3,
       "periodScores": {
@@ -3761,11 +3085,7 @@
       },
       "isOvertime": false,
       "isShootout": false,
-      "liveInfo": {
-        "periodLabel": "Repriza 3",
-        "clock": "60:00",
-        "statusText": "Game Completed"
-      },
+      "liveInfo": null,
       "stats": {
         "sogHome": 18,
         "sogAway": 45,
@@ -4035,7 +3355,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -4080,7 +3400,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -4125,7 +3445,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -4147,8 +3467,8 @@
       "time": "18:30",
       "location": "Pat. Olimpic Brasov",
       "startingPrice": null,
-      "status": "LIVE",
-      "matchState": "live",
+      "status": "Finalizat",
+      "matchState": "finished",
       "homeScore": 11,
       "awayScore": 0,
       "periodScores": {
@@ -4160,11 +3480,7 @@
       },
       "isOvertime": false,
       "isShootout": false,
-      "liveInfo": {
-        "periodLabel": "Repriza 3",
-        "clock": "60:00",
-        "statusText": "Game Completed"
-      },
+      "liveInfo": null,
       "stats": {
         "sogHome": 73,
         "sogAway": 20,
@@ -4580,8 +3896,8 @@
       "time": "18:30",
       "location": "Pat. Doru Tureanu, Bucuresti",
       "startingPrice": null,
-      "status": "LIVE",
-      "matchState": "live",
+      "status": "Finalizat",
+      "matchState": "finished",
       "homeScore": 0,
       "awayScore": 11,
       "periodScores": {
@@ -4593,11 +3909,7 @@
       },
       "isOvertime": false,
       "isShootout": false,
-      "liveInfo": {
-        "periodLabel": "Repriza 3",
-        "clock": "60:00",
-        "statusText": "Game Completed"
-      },
+      "liveInfo": null,
       "stats": {
         "sogHome": 16,
         "sogAway": 65,
@@ -5008,7 +4320,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2136_CNM29_2026-10-23.pdf",
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -5054,7 +4366,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2138_CNM31_2026-10-25.pdf",
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -5077,8 +4389,8 @@
       "time": "18:30",
       "location": "Pat. Olimpic Brasov",
       "startingPrice": null,
-      "status": "LIVE",
-      "matchState": "live",
+      "status": "Finalizat",
+      "matchState": "finished",
       "homeScore": 6,
       "awayScore": 3,
       "periodScores": {
@@ -5090,11 +4402,7 @@
       },
       "isOvertime": false,
       "isShootout": false,
-      "liveInfo": {
-        "periodLabel": "Repriza 3",
-        "clock": "60:00",
-        "statusText": "Game Completed"
-      },
+      "liveInfo": null,
       "stats": {
         "sogHome": 49,
         "sogAway": 19,
@@ -5521,7 +4829,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -5566,7 +4874,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -5588,8 +4896,8 @@
       "time": "17:00",
       "location": "Pat. Olimpic Brasov",
       "startingPrice": null,
-      "status": "LIVE",
-      "matchState": "live",
+      "status": "Finalizat",
+      "matchState": "finished",
       "homeScore": 6,
       "awayScore": 1,
       "periodScores": {
@@ -5601,11 +4909,7 @@
       },
       "isOvertime": false,
       "isShootout": false,
-      "liveInfo": {
-        "periodLabel": "Repriza 3",
-        "clock": "60:00",
-        "statusText": "Game Completed"
-      },
+      "liveInfo": null,
       "stats": {
         "sogHome": 53,
         "sogAway": 18,
@@ -5984,7 +5288,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -6030,7 +5334,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -6075,7 +5379,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -6155,7 +5459,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -6200,7 +5504,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -6245,7 +5549,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -6290,7 +5594,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -6370,7 +5674,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -6415,7 +5719,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -6460,7 +5764,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -6505,7 +5809,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -6550,7 +5854,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -6595,7 +5899,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -6640,7 +5944,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -6685,7 +5989,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -6730,7 +6034,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -6775,7 +6079,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -6820,7 +6124,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -6865,7 +6169,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -6910,7 +6214,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -6955,7 +6259,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -7000,7 +6304,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
@@ -7045,7 +6349,7 @@
       "links": {
         "gameCenter": "https://www.ersteliga.hu/game/id/undefined",
         "video": null,
-        "reportPdf": null,
+        "reportPdf": "https://admin.icehockey.ro/storage/sheet_pdf/FRHG_Game_Sheet_2087_CNM1_2026-09-18.pdf",
         "lineupPdf": null
       },
       "detailsLoaded": false,
